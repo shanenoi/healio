@@ -5,6 +5,7 @@ import {
   useLocation,
 } from "react-router-dom";
 import MedicalRegister from "./pages/MedicalRegister";
+import MedicalRegister1 from "./pages/MedicalRegister1";
 import MedicalRegister2 from "./pages/MedicalRegister2";
 import MedicalRegister3 from "./pages/MedicalRegister3";
 import MedicalRegister4 from "./pages/MedicalRegister4";
@@ -13,7 +14,6 @@ import MedicalRegister6 from "./pages/MedicalRegister6";
 import MedicalRegister7 from "./pages/MedicalRegister7";
 import MedicalRegister8 from "./pages/MedicalRegister8";
 import LogIn from "./pages/LogIn";
-import MedicalRegister1 from "./pages/MedicalRegister1";
 import { useEffect } from "react";
 
 function App() {
@@ -33,6 +33,10 @@ function App() {
 
     switch (pathname) {
       case "/":
+        title = "";
+        metaDescription = "";
+        break;
+      case "/medical-register":
         title = "";
         metaDescription = "";
         break;
@@ -68,10 +72,6 @@ function App() {
         title = "";
         metaDescription = "";
         break;
-      case "/medical-register":
-        title = "";
-        metaDescription = "";
-        break;
     }
 
     if (title) {
@@ -91,6 +91,7 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<MedicalRegister />} />
+      <Route path="/medical-register" element={<MedicalRegister1 />} />
       <Route path="/medical-register1" element={<MedicalRegister2 />} />
       <Route path="/medical-register2" element={<MedicalRegister3 />} />
       <Route path="/medical-register3" element={<MedicalRegister4 />} />
@@ -99,7 +100,6 @@ function App() {
       <Route path="/medical-register6" element={<MedicalRegister7 />} />
       <Route path="/medical-register7" element={<MedicalRegister8 />} />
       <Route path="/log-in" element={<LogIn />} />
-      <Route path="/medical-register" element={<MedicalRegister1 />} />
     </Routes>
   );
 }

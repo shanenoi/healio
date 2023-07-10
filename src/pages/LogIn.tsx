@@ -3,8 +3,8 @@ import WelcomeContainer from "../components/WelcomeContainer";
 
 const LogIn: FunctionComponent = () => {
   return (
-    <div className="relative bg-monochrome-white w-full h-[1024px] overflow-hidden text-left text-lg text-monochrome-white font-button-button-2">
-      <div className="absolute top-[0px] left-[704px] bg-blue-blue-600 w-[62%] h-[1024px] text-center">
+    <div className="relative bg-monochrome-white w-full h-[996px] overflow-hidden text-left text-lg text-monochrome-white font-button-button-2">
+      <div className="absolute top-[0px] left-[704px] bg-blue-blue-600 w-[62%] h-[996px] text-center">
         <div className="absolute top-[224px] left-[calc(50%_-_266px)] w-[532.97px] h-[575px] overflow-hidden">
           <div className="absolute top-[444px] left-[75px] w-[383.44px] flex flex-col items-center justify-start gap-[10px]">
             <div className="self-stretch relative font-semibold inline-block h-11 shrink-0">
