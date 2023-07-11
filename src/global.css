@@ -11,3 +11,31 @@ body {
 ::after {
   border-width: 0;
 }
+
+.input {
+  border: none;
+  outline: none;
+}
+
+.select-input {
+  background-color: #ffffff;
+  border: 1px solid #ffffff;
+}
+
+.select-input-option {
+  background-color: #ffffff;
+}
+
+.no-arrows::-webkit-outer-spin-button,
+.no-arrows::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.no-arrows {
+  -moz-appearance: textfield;
+}
+
+.cursor-button {
+  cursor: pointer;
+}
