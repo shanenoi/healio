@@ -3,6 +3,7 @@ import MedicalRegister from './pages/MedicalRegister'
 import LogIn from './pages/LogIn'
 import { useEffect } from 'react'
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function App () {
   const action = useNavigationType()
   const location = useLocation()
@@ -61,11 +62,11 @@ function App () {
         break
     }
 
-    if (title) {
+    if (title !== '') {
       document.title = title
     }
 
-    if (metaDescription) {
+    if (metaDescription !== '') {
       const metaDescriptionTag: HTMLMetaElement | null = document.querySelector(
         'head > meta[name="description"]'
       )
@@ -76,9 +77,9 @@ function App () {
   }, [pathname])
 
   /*
-    login -> login
-    medical-register -> medical-register7
-     */
+          login -> login
+          medical-register -> medical-register7
+           */
   return (
         <Routes>
             <Route path="/log-in" element={<LogIn/>}/>
