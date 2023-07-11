@@ -1,6 +1,6 @@
 import { FunctionComponent } from "react";
 
-type EmployeeDataContainerType = {
+type EmployeeInfoContainerType = {
   maskGroup?: string;
   rightIcon?: string;
   xRegular?: string;
@@ -8,7 +8,7 @@ type EmployeeDataContainerType = {
   rightIcon1?: string;
 };
 
-const EmployeeDataContainer: FunctionComponent<EmployeeDataContainerType> = ({
+const EmployeeInfoContainer: FunctionComponent<EmployeeInfoContainerType> = ({
   maskGroup,
   rightIcon,
   xRegular,
@@ -195,16 +195,51 @@ const EmployeeDataContainer: FunctionComponent<EmployeeDataContainerType> = ({
                   />
                 </div>
               </div>
-              <div className="w-[310px] flex flex-col items-start justify-start gap-[8px]">
+              <div className="w-[310px] flex flex-col items-start justify-start gap-[6px]">
                 <div className="flex flex-row items-start justify-start gap-[2px]">
                   <div className="relative leading-[150%]">Hẹn ngày khám</div>
                   <div className="relative text-xl leading-[24px] font-semibold font-mobile-body-subtitle-2 text-red-red-400 hidden">
                     *
                   </div>
                 </div>
-                <div className="relative w-14 h-[26px]">
-                  <div className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] rounded-81xl bg-blue-blue-400" />
-                  <div className="absolute h-[76.92%] w-[35.71%] top-[11.54%] right-[5.36%] bottom-[11.54%] left-[58.93%] rounded-[50%] bg-monochrome-white" />
+                <div className="w-[310px] flex flex-col items-start justify-start">
+                  <div className="hidden flex-row items-start justify-start gap-[2px]">
+                    <div className="relative leading-[150%]">Hẹn ngày khám</div>
+                    <div className="relative text-xl leading-[24px] font-semibold font-mobile-body-subtitle-2 text-red-red-400 hidden">
+                      *
+                    </div>
+                  </div>
+                  <div className="self-stretch flex flex-col items-start justify-start gap-[4px] text-center text-sm">
+                    <div className="self-stretch rounded-3xs bg-monochrome-white box-border h-[41px] flex flex-row py-0 px-4 items-center justify-start gap-[4px] border-[1px] border-solid border-grey-grey-40-t">
+                      <img
+                        className="relative w-[22px] h-[22px] hidden"
+                        alt=""
+                        src="/left-icon1.svg"
+                      />
+                      <div className="flex flex-row items-center justify-start gap-[1px]">
+                        <div className="relative leading-[150%]">03</div>
+                        <div className="relative leading-[150%]">/</div>
+                        <div className="relative leading-[150%]">10</div>
+                        <div className="relative leading-[150%]">/</div>
+                        <div className="relative leading-[150%]">2022</div>
+                      </div>
+                      <img
+                        className="relative w-[22px] h-[22px] hidden"
+                        alt=""
+                        src="/left-icon1.svg"
+                      />
+                    </div>
+                    <div className="self-stretch hidden flex-row py-0 px-3 items-end justify-start gap-[4px] text-left text-red-red-400">
+                      <img
+                        className="relative w-5 h-5"
+                        alt=""
+                        src="/notice-icon.svg"
+                      />
+                      <div className="flex-1 relative leading-[150%]">
+                        Allert
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -411,4 +446,4 @@ const EmployeeDataContainer: FunctionComponent<EmployeeDataContainerType> = ({
   );
 };
 
-export default EmployeeDataContainer;
+export default EmployeeInfoContainer;

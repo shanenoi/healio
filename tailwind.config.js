@@ -4,8 +4,21 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        "blue-blue-300": "#4285f4",
+        "background-background": "#f9fafb",
+        "neutral-grey-800": "#252525",
+        "grey-grey-300-s": "#888b96",
+        "blue-blue-400": "#2b77f3",
         "monochrome-white": "#fff",
+        "grey-grey-900-p": "#202124",
+        "blue-blue-20": "#ecf3fe",
+        "monochrome-background": "#f3f4f7",
+        "grey-grey-40-t": "#dfdfe2",
+        "green-green-900": "#0e2f17",
+        "blue-blue-100": "#9fc1f9",
+        "blue-blue-900": "#04204d",
+        "grey-grey-60": "#c9cacf",
+        "blur-background": "rgba(0, 0, 0, 0.3)",
+        "blue-blue-300": "#4285f4",
         whitesmoke: "#f8f8f8",
         "neutral-grey-200": "#e9e9e9",
         "neutral-grey-500-secondary": "#808080",
@@ -13,11 +26,6 @@ module.exports = {
         "neutral-grey-600": "#626262",
         "neutral-grey-700": "#3c3c3c",
         "red-red-400": "#ea4335",
-        "grey-grey-40-t": "#dfdfe2",
-        "grey-grey-300-s": "#888b96",
-        "grey-grey-900-p": "#202124",
-        "blue-blue-400": "#2b77f3",
-        "blur-background": "rgba(0, 0, 0, 0.3)",
         "neutral-neutral-6": "#222",
         "red-red-500": "#de2817",
         "blue-blue-600": "#0b51c1",
@@ -25,7 +33,7 @@ module.exports = {
         "blue-blue-800": "#09454d",
       },
       fontFamily: {
-        "button-button-2": "Roboto",
+        "body-body-2": "Roboto",
         "mobile-body-subtitle-2": "'Open Sans'",
       },
       borderRadius: {
