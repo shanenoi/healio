@@ -25,43 +25,15 @@ function App () {
         metaDescription = ''
         break
       case '/medical-register':
-        title = ''
-        metaDescription = ''
-        break
-      case '/medical-register1':
-        title = ''
-        metaDescription = ''
-        break
-      case '/medical-register2':
-        title = ''
-        metaDescription = ''
-        break
-      case '/medical-register3':
-        title = ''
-        metaDescription = ''
-        break
-      case '/medical-register4':
-        title = ''
-        metaDescription = ''
-        break
-      case '/medical-register5':
-        title = ''
-        metaDescription = ''
-        break
-      case '/medical-register6':
-        title = ''
-        metaDescription = ''
-        break
-      case '/medical-register7':
-        title = ''
+        title = 'Medical Register'
         metaDescription = ''
         break
       case '/log-in':
-        title = ''
+        title = 'LogIn'
         metaDescription = ''
         break
-      case '/timesheet':
-        title = ''
+      case '/timesheet-doctor':
+        title = 'Timesheet Doctor'
         metaDescription = ''
         break
     }
