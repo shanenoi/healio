@@ -1,24 +1,62 @@
-import { FunctionComponent } from "react";
-import PatientVisitContainer from "../components/PatientVisitContainer";
-import EmployeeInfoContainer from "../components/EmployeeInfoContainer";
+import PatientVisitContainer from '../components/PatientVisitContainer'
+import { type FunctionComponent, useRef, useState } from 'react'
+import MedicalRegisterContainer from '../components/MedicalRegisterContainer'
 
 const MedicalRegister: FunctionComponent = () => {
-  return (
-    <div className="relative bg-monochrome-white w-full h-[1024px]">
-      <PatientVisitContainer
-        productIds="/lefticon2.svg"
-        productDimensions="/lefticon2.svg"
-      />
-      <div className="absolute top-[calc(50%_-_512px)] left-[calc(50%_-_720px)] bg-blur-background w-[1440px] h-[1024px]" />
-      <EmployeeInfoContainer
-        maskGroup="/mask-group1.svg"
-        rightIcon="/righticon1.svg"
-        xRegular="/x-regular.svg"
-        leftIcon="/lefticon21.svg"
-        rightIcon1="/lefticon21.svg"
-      />
-    </div>
-  );
-};
+  const blurBackgroundRef = useRef(null)
+  const [showMedicalRegisterContainer, setShowMedicalRegisterContainer] = useState(false)
 
-export default MedicalRegister;
+  const setVisibilityMedicalRegister = (show: boolean) => {
+    if (blurBackgroundRef.current === null) {
+      return
+    }
+
+    if (show) {
+      (blurBackgroundRef.current as HTMLElement).style.visibility = 'visible'
+      setShowMedicalRegisterContainer(show)
+    } else {
+      (blurBackgroundRef.current as HTMLElement).style.visibility = 'hidden'
+      setShowMedicalRegisterContainer(show)
+    }
+  }
+  const showMedicalRegister = () => {
+    setVisibilityMedicalRegister(true)
+  }
+  const hideMedicalRegister = () => {
+    setVisibilityMedicalRegister(false)
+  }
+
+  return (
+        <div className="relative bg-monochrome-white w-full h-[1024px]">
+            <PatientVisitContainer
+                productIds="/lefticon9.svg"
+                productDimensions="/lefticon9.svg"
+                onclick={showMedicalRegister}
+            />
+            <img
+                className="absolute top-[0px] left-[1000px] w-[845px] h-[1024px]"
+                alt=""
+                src="/rectangle-15.svg"
+            />
+            <div
+                id={'blur-background'}
+                ref={blurBackgroundRef}
+                style={{ visibility: 'hidden' }}
+                className="absolute top-[calc(50%_-_512px)] left-[0px] bg-blur-background w-[100%] h-[1024px]"
+                onClick={hideMedicalRegister}
+            />
+            {showMedicalRegisterContainer && (
+                <MedicalRegisterContainer
+                    maskGroup="/mask-group4.svg"
+                    rightIcon="/righticon4.svg"
+                    xRegular="/x-regular3.svg"
+                    leftIcon="/lefticon8.svg"
+                    rightIcon1="/lefticon8.svg"
+                    xRegularClick={hideMedicalRegister}
+                />
+            )}
+        </div>
+  )
+}
+
+export default MedicalRegister
