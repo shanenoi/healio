@@ -1,7 +1,7 @@
 import { type FunctionComponent } from 'react'
 import TaiMuiHongContainer from '../components/TaiMuiHongContainer'
 
-const TimesheetDoctor1: FunctionComponent = () => {
+const TimesheetDoctor: FunctionComponent = () => {
   return (
     <div className="relative w-full h-[1024px] text-center text-sm text-grey-grey-60 font-body-body-2">
       <div className="absolute top-[0px] left-[0px] bg-background-background w-[100%] h-[1024px] overflow-hidden">
@@ -82,57 +82,12 @@ const TimesheetDoctor1: FunctionComponent = () => {
                   </div>
                 </div>
               </div>
-              <TaiMuiHongContainer optionText="1" propColor="#0e2f17" />
+              <TaiMuiHongContainer optionText="1" propColor="#202124" />
               <TaiMuiHongContainer optionText="2" propColor="#202124" />
               <TaiMuiHongContainer optionText="3" propColor="#202124" />
               <TaiMuiHongContainer optionText="4" propColor="#202124" />
               <TaiMuiHongContainer optionText="5" propColor="#202124" />
               <TaiMuiHongContainer optionText="6" propColor="#202124" />
-              <div className="rounded-lg bg-monochrome-background box-border w-[1176px] flex flex-row p-6 items-center justify-start text-left text-grey-grey-900-p border-[1px] border-solid border-grey-grey-40-t">
-                <div className="w-20 flex flex-col items-start justify-center">
-                  <div className="relative leading-[150%]">7</div>
-                </div>
-                <div className="self-stretch flex-1 flex flex-row items-center justify-start gap-[16px]">
-                  <img
-                    className="relative w-12 h-12"
-                    alt=""
-                    src="/mask-group.svg"
-                  />
-                  <div className="flex flex-col items-start justify-start gap-[4px]">
-                    <div className="relative">15213056</div>
-                    <div className="relative leading-[150%] font-medium">
-                      Nguyễn Tấn Phát
-                    </div>
-                  </div>
-                </div>
-                <div className="w-[185px] flex flex-col items-start justify-center gap-[4px]">
-                  <div className="relative leading-[150%]">0805232026</div>
-                  <div className="relative text-neutral-grey-800">
-                    phatpatient@gmail.com
-                  </div>
-                </div>
-                <div className="w-[200px] flex flex-col items-start justify-center text-center">
-                  <div className="flex flex-row items-center justify-start gap-[1px]">
-                    <div className="relative leading-[150%]">03</div>
-                    <div className="relative leading-[150%]">/</div>
-                    <div className="relative leading-[150%]">10</div>
-                    <div className="relative leading-[150%]">/</div>
-                    <div className="relative leading-[150%]">2022</div>
-                  </div>
-                </div>
-                <div className="flex-1 flex flex-col items-start justify-center text-blue-blue-400">
-                  <div className="relative leading-[150%] font-medium">
-                    Xét nghiệm máu
-                  </div>
-                </div>
-                <div className="w-[100px] flex flex-col items-start justify-center">
-                  <img
-                    className="relative w-8 h-8"
-                    alt=""
-                    src="/info-regular.svg"
-                  />
-                </div>
-              </div>
             </div>
             <div className="self-stretch flex flex-row items-center justify-end gap-[24px] text-grey-grey-900-p">
               <div className="flex flex-row items-center justify-center gap-[16px]">
@@ -256,4 +211,4 @@ const TimesheetDoctor1: FunctionComponent = () => {
   )
 }
 
-export default TimesheetDoctor1
+export default TimesheetDoctor

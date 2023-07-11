@@ -1,6 +1,6 @@
 import LogIn from './pages/LogIn'
 import MedicalRegister from './pages/MedicalRegister'
-import TimesheetDoctor from './pages/TimesheetDoctor1'
+import TimesheetDoctor from './pages/TimesheetDoctor'
 import { Route, Routes, useLocation, useNavigationType } from 'react-router-dom'
 import { useEffect } from 'react'
 
