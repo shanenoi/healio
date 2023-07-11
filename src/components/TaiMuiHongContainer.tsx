@@ -1,22 +1,23 @@
-import { FunctionComponent, useMemo } from "react";
-import CSS, { Property } from "csstype";
+import { type FunctionComponent, useMemo } from 'react'
+import { type Property } from 'csstype'
+import type CSS from 'csstype'
 
-type TaiMuiHongContainerType = {
-  optionText?: string;
+interface TaiMuiHongContainerType {
+  optionText?: string
 
   /** Style props */
-  propColor?: Property.Color;
-};
+  propColor?: Property.Color
+}
 
 const TaiMuiHongContainer: FunctionComponent<TaiMuiHongContainerType> = ({
   optionText,
-  propColor,
+  propColor
 }) => {
   const nguynTnPhtStyle: CSS.Properties = useMemo(() => {
     return {
-      color: propColor,
-    };
-  }, [propColor]);
+      color: propColor
+    }
+  }, [propColor])
 
   return (
     <div className="rounded-lg bg-monochrome-white box-border w-[1176px] flex flex-row p-6 items-center justify-start text-left text-sm text-grey-grey-900-p font-body-body-2 border-[1px] border-solid border-grey-grey-40-t">
@@ -56,7 +57,7 @@ const TaiMuiHongContainer: FunctionComponent<TaiMuiHongContainerType> = ({
         <img className="relative w-8 h-8" alt="" src="/info-regular.svg" />
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default TaiMuiHongContainer;
+export default TaiMuiHongContainer

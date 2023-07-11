@@ -1,11 +1,11 @@
-import { FunctionComponent } from "react";
-import TaiMuiHongContainer from "../components/TaiMuiHongContainer";
+import { type FunctionComponent } from 'react'
+import TaiMuiHongContainer from '../components/TaiMuiHongContainer'
 
 const TimesheetDoctor1: FunctionComponent = () => {
   return (
     <div className="relative w-full h-[1024px] text-center text-sm text-grey-grey-60 font-body-body-2">
-      <div className="absolute top-[0px] left-[0px] bg-background-background w-[1440px] h-[1024px] overflow-hidden">
-        <div className="absolute top-[0px] left-[200px] h-[1024px] flex flex-col items-start justify-start">
+      <div className="absolute top-[0px] left-[0px] bg-background-background w-[100%] h-[1024px] overflow-hidden">
+        <div className="absolute top-[0px] left-[20%] h-[1024px] flex flex-col items-start justify-start">
           <div className="h-[1024px] flex flex-col p-8 box-border items-center justify-start gap-[32px]">
             <div className="w-[1176px] flex flex-row items-center justify-between text-left">
               <div className="rounded-xl bg-monochrome-white box-border w-[343px] h-[49px] flex flex-row py-0 px-3 items-center justify-start gap-[8px] border-[1px] border-solid border-grey-grey-40-t">
@@ -253,7 +253,7 @@ const TimesheetDoctor1: FunctionComponent = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default TimesheetDoctor1;
+export default TimesheetDoctor1
