@@ -1,6 +1,7 @@
-import { Route, Routes, useLocation, useNavigationType } from 'react-router-dom'
-import MedicalRegister from './pages/MedicalRegister'
 import LogIn from './pages/LogIn'
+import MedicalRegister from './pages/MedicalRegister'
+import TimesheetDoctor from './pages/TimesheetDoctor'
+import { Route, Routes, useLocation, useNavigationType } from 'react-router-dom'
 import { useEffect } from 'react'
 
 function App () {
@@ -24,39 +25,15 @@ function App () {
         metaDescription = ''
         break
       case '/medical-register':
-        title = ''
-        metaDescription = ''
-        break
-      case '/medical-register1':
-        title = ''
-        metaDescription = ''
-        break
-      case '/medical-register2':
-        title = ''
-        metaDescription = ''
-        break
-      case '/medical-register3':
-        title = ''
-        metaDescription = ''
-        break
-      case '/medical-register4':
-        title = ''
-        metaDescription = ''
-        break
-      case '/medical-register5':
-        title = ''
-        metaDescription = ''
-        break
-      case '/medical-register6':
-        title = ''
-        metaDescription = ''
-        break
-      case '/medical-register7':
-        title = ''
+        title = 'Medical Register'
         metaDescription = ''
         break
       case '/log-in':
-        title = ''
+        title = 'LogIn'
+        metaDescription = ''
+        break
+      case '/timesheet-doctor':
+        title = 'Timesheet Doctor'
         metaDescription = ''
         break
     }
@@ -75,15 +52,14 @@ function App () {
     }
   }, [pathname])
 
-  /*
-          login -> login
-          medical-register -> medical-register7
-           */
+  // login -> login
+  // medical-register -> medical-register7
   return (
-        <Routes>
-            <Route path="/log-in" element={<LogIn/>}/>
-            <Route path="/medical-register" element={<MedicalRegister/>}/>
-        </Routes>
+      <Routes>
+        <Route path="/log-in" element={<LogIn/>}/>
+        <Route path="/medical-register" element={<MedicalRegister/>}/>
+        <Route path="/timesheet-doctor" element={<TimesheetDoctor />} />
+      </Routes>
   )
 }
 
