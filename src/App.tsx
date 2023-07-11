@@ -3,7 +3,6 @@ import MedicalRegister from './pages/MedicalRegister'
 import LogIn from './pages/LogIn'
 import { useEffect } from 'react'
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function App () {
   const action = useNavigationType()
   const location = useLocation()
