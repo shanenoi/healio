@@ -1,7 +1,10 @@
 import { type FunctionComponent } from 'react'
-import TaiMuiHongContainer from '../components/TaiMuiHongContainer'
+import KhamBenhContainer from '../components/KhamBenhContainer'
 
 const TimesheetDoctor: FunctionComponent = () => {
+  const print = (id: string) => {
+    console.log(id)
+  }
   return (
     <div className="relative w-full h-[1024px] text-center text-sm text-grey-grey-60 font-body-body-2">
       <div className="absolute top-[0px] left-[0px] bg-background-background w-[100%] h-[1024px] overflow-hidden">
@@ -15,6 +18,7 @@ const TimesheetDoctor: FunctionComponent = () => {
                   src="/left-icon.svg"
                 />
                 <div className="flex-1 relative leading-[150%]">
+                  {/* TODO: update here */}
                   Tìm kiếm tên bệnh nhân
                 </div>
               </div>
@@ -82,12 +86,12 @@ const TimesheetDoctor: FunctionComponent = () => {
                   </div>
                 </div>
               </div>
-              <TaiMuiHongContainer optionText="1" propColor="#202124" />
-              <TaiMuiHongContainer optionText="2" propColor="#202124" />
-              <TaiMuiHongContainer optionText="3" propColor="#202124" />
-              <TaiMuiHongContainer optionText="4" propColor="#202124" />
-              <TaiMuiHongContainer optionText="5" propColor="#202124" />
-              <TaiMuiHongContainer optionText="6" propColor="#202124" />
+              <KhamBenhContainer ActionsCallback={print} OrderNumber="1" FullName={'Nguyễn Tấn Phát'} PhoneNumber={'0805232026'} Email={'phatpatient@gmail.com'} CreatedAt={new Date()} TypeAccess={'Tai mũi họng'} propColor="#202124"/>
+              <KhamBenhContainer ActionsCallback={print} OrderNumber="2" FullName={'Nguyễn Tấn Phát'} PhoneNumber={'0805232026'} Email={'phatpatient@gmail.com'} CreatedAt={new Date()} TypeAccess={'Tai mũi họng'} propColor="#202124" />
+              <KhamBenhContainer ActionsCallback={print} OrderNumber="3" FullName={'Nguyễn Tấn Phát'} PhoneNumber={'0805232026'} Email={'phatpatient@gmail.com'} CreatedAt={new Date()} TypeAccess={'Tai mũi họng'} propColor="#202124" />
+              <KhamBenhContainer ActionsCallback={print} OrderNumber="4" FullName={'Nguyễn Tấn Phát'} PhoneNumber={'0805232026'} Email={'phatpatient@gmail.com'} CreatedAt={new Date()} TypeAccess={'Tai mũi họng'} propColor="#202124" />
+              <KhamBenhContainer ActionsCallback={print} OrderNumber="5" FullName={'Nguyễn Tấn Phát'} PhoneNumber={'0805232026'} Email={'phatpatient@gmail.com'} CreatedAt={new Date()} TypeAccess={'Tai mũi họng'} propColor="#202124" />
+              <KhamBenhContainer ActionsCallback={print} OrderNumber="6" FullName={'Nguyễn Tấn Phát'} PhoneNumber={'0805232026'} Email={'phatpatient@gmail.com'} CreatedAt={new Date()} TypeAccess={'Tai mũi họng'} propColor="#202124" />
             </div>
             <div className="self-stretch flex flex-row items-center justify-end gap-[24px] text-grey-grey-900-p">
               <div className="flex flex-row items-center justify-center gap-[16px]">
