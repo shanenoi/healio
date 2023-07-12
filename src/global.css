@@ -1,41 +1,44 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@600&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 body {
-  @apply leading-[normal] m-0;
+    @apply leading-[normal] m-0;
 }
+
 *,
 ::before,
 ::after {
-  border-width: 0;
+    border-width: 0;
 }
 
 .input {
-  border: none;
-  outline: none;
+    width: 100%;
+    border: none;
+    outline: none;
 }
 
 .select-input {
-  background-color: #ffffff;
-  border: 1px solid #ffffff;
+    background-color: #ffffff;
+    border: 1px solid #ffffff;
 }
 
 .select-input-option {
-  background-color: #ffffff;
+    background-color: #ffffff;
 }
 
 .no-arrows::-webkit-outer-spin-button,
 .no-arrows::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 .no-arrows {
-  -moz-appearance: textfield;
+    -moz-appearance: textfield;
 }
 
 .cursor-button {
-  cursor: pointer;
+    cursor: pointer;
 }
