@@ -1,6 +1,6 @@
+import MedicalRegisterContainer from '../components/MedicalRegisterContainer'
 import PatientVisitContainer from '../components/PatientVisitContainer'
 import {type FunctionComponent, useRef, useState} from 'react'
-import MedicalRegisterContainer from '../components/MedicalRegisterContainer'
 
 const MedicalRegister: FunctionComponent = () => {
     const blurBackgroundRef = useRef(null)
@@ -55,10 +55,10 @@ const MedicalRegister: FunctionComponent = () => {
                     xRegularClick={hideMedicalRegister}
                     saveClick={(k, b) => {
                         console.log(`k.benhNhanID ${k.benhNhanID}`)
-                        console.log(`k.bacSyID ${k.bacSyID}`)
+                        console.log(`k.bacSyID ${k.doctorID}`)
                         console.log(`k.ngayGio ${(k.ngayGio === undefined ? '' : k.ngayGio.toISOString())}`)
                         console.log(`k.thoiLuong ${(k.thoiLuong === undefined ? '' : k.thoiLuong)}`)
-                        console.log(`k.loaiKhamID ${k.loaiKhamID}`)
+                        console.log(`k.loaiKhamID ${k.examinationTypeID}`)
                         console.log(`k.note ${k.note}`)
 
                         console.log(`b.email ${b.email}`)

@@ -1,8 +1,42 @@
-import { type FunctionComponent } from 'react'
-import WelcomeContainer from '../components/WelcomeContainer'
+import {ANON_API_KEY} from '../api/graphql'
+import {Auth} from '@supabase/auth-ui-react'
+import {ThemeSupa} from '@supabase/auth-ui-shared'
+import {createClient, type User} from '@supabase/supabase-js'
+import {type FunctionComponent, useEffect, useState} from 'react'
+
+const supabaseClient = createClient('https://ykeknooiaudhzsxuvrhy.supabase.co', ANON_API_KEY)
 
 const LogIn: FunctionComponent = () => {
-  return (
+    const confirmationText = 'Đã gửi'
+    const emailInputPlaceholder = 'Nhập địa chỉ Email'
+    const emailLabel = 'Địa chỉ Email'
+    const loadingButtonLabel = 'Đang gửi...'
+    const passwordInputPlaceholder = 'Nhập mật khẩu'
+    const passwordLabel = 'Mật khẩu'
+
+    const [user, setUser] = useState<User | null>(null)
+    useEffect(() => {
+        const {data: authListener} = supabaseClient.auth.onAuthStateChange((event, session) => {
+            if (session === null) {
+                return
+            }
+
+            if (session.user !== null) {
+                setUser(session.user)
+            } else {
+                setUser(null)
+            }
+
+            console.log('user')
+            console.log(user)
+        })
+
+        return () => {
+            authListener.subscription.unsubscribe()
+        }
+    }, [])
+
+    return (
         <div
             className="relative bg-monochrome-white w-full h-[996px] overflow-hidden text-left text-lg text-monochrome-white font-button-button-2">
             <div className="absolute top-[0px] left-[704px] bg-blue-blue-600 w-[62%] h-[996px] text-center">
@@ -26,16 +60,53 @@ const LogIn: FunctionComponent = () => {
                 </div>
             </div>
             <div
-                className="absolute top-[372px] left-[152px] flex flex-col items-start justify-start gap-[16px] text-13xl text-grey-grey-900-p">
+                className="absolute top-[23%] left-[152px] flex flex-col items-start justify-start gap-[16px] text-13xl text-grey-grey-900-p">
                 <div className="flex flex-col items-start justify-start gap-[8px]">
                     <div className="relative leading-[150%] font-semibold inline-block w-[400px] h-9 shrink-0">
                         Chào mừng!
                     </div>
-                    <div className="relative text-base leading-[150%] inline-block w-[400px] h-10 shrink-0">
-                        Vui lòng nhập thông tin đăng nhập để truy cập vào tài khoản của bạn.
-                    </div>
                 </div>
-                <WelcomeContainer/>
+
+                <Auth
+                    supabaseClient={supabaseClient}
+                    appearance={{theme: ThemeSupa}}
+                    providers={[]}
+                    localization={{
+                        variables: {
+                            sign_in: {
+                                email_label: emailLabel,
+                                password_label: passwordLabel,
+                                email_input_placeholder: emailInputPlaceholder,
+                                password_input_placeholder: passwordInputPlaceholder,
+                                button_label: 'Đăng Nhập',
+                                link_text: 'Quay trở lại đăng Nhập'
+                            },
+                            sign_up: {
+                                email_label: emailLabel,
+                                password_label: passwordLabel,
+                                email_input_placeholder: emailInputPlaceholder,
+                                password_input_placeholder: passwordInputPlaceholder,
+                                button_label: 'Đăng Ký',
+                                link_text: 'Quay trở lại đăng ký'
+                            },
+                            forgotten_password: {
+                                email_label: emailLabel,
+                                email_input_placeholder: emailInputPlaceholder,
+                                loading_button_label: loadingButtonLabel,
+                                confirmation_text: confirmationText,
+                                button_label: 'Gửi hướng dẫn đặt lại mật khẩu',
+                                link_text: 'Quên mật khẩu'
+                            }
+                        }
+                    }}
+                />
+
+                {/* <LoginContainer */}
+                {/*    loginClick={(k) => { */}
+                {/*        console.log(`k.email ${k.email}`) */}
+                {/*        console.log(`k.password ${k.password}`) */}
+                {/*    }} */}
+                {/* /> */}
             </div>
             <div
                 className="absolute bottom-[40px] left-[calc(50%_-_421px)] flex flex-col items-center justify-start gap-[8px] text-base text-grey-grey-300-s font-mobile-body-subtitle-2">
@@ -43,11 +114,11 @@ const LogIn: FunctionComponent = () => {
                     Liên hệ hỗ trợ
                 </div>
                 <div className="relative text-lg leading-[27px] capitalize font-semibold text-red-red-500">
-                    0123456789
+                    0214365879
                 </div>
             </div>
         </div>
-  )
+    )
 }
 
 export default LogIn

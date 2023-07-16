@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const ANON_API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlrZWtub29pYXVkaHpzeHV2cmh5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2Nzk0NDkwNzEsImV4cCI6MTk5NTAyNTA3MX0.J5Ur9wOA8obkBCKnI5tz7DJkeU4m3J7MPmQpdDjWu3U'
+export const ANON_API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlrZWtub29pYXVkaHpzeHV2cmh5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2Nzk0NDkwNzEsImV4cCI6MTk5NTAyNTA3MX0.J5Ur9wOA8obkBCKnI5tz7DJkeU4m3J7MPmQpdDjWu3U'
 const GRAPHQL_URL = 'https://ykeknooiaudhzsxuvrhy.supabase.co/graphql/v1'
 
 export interface GraphQLQueryProps {

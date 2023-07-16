@@ -1,20 +1,20 @@
-interface KhamBenhPayloadType {
+export interface KhamBenhPayloadType {
     benhNhanID: string
-    bacSyID: string
+    doctorID: string
     ngayGio?: Date
     thoiLuong?: number
-    loaiKhamID: string
+    examinationTypeID: string
     note: string
 }
 
-interface BenhNhanPayloadType {
+export interface BenhNhanPayloadType {
     email: string
     firstName: string
     lastName: string
     phone: string
 }
 
-export type {
-    KhamBenhPayloadType,
-    BenhNhanPayloadType
+export interface LoginPayloadType {
+    email: string
+    password: string
 }

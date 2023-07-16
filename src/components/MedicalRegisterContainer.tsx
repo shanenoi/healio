@@ -4,9 +4,7 @@ import {GraphQLClient} from '../api/graphql'
 import {QueryListDoctorByExaminationType, QueryListExaminationType} from '../api/graphql_query'
 import {ToDateTimeFormat, ToTimeFormat} from '../utils/utils'
 import {type BenhNhanPayloadType, type KhamBenhPayloadType} from '../api/request'
-import {type ListDoctorByExaminationTypeResponse, type ExaminationTypeResponse} from '../api/response'
-
-type saveClickHandler = (khamBenhPayload: KhamBenhPayloadType, benhNhanPayload: BenhNhanPayloadType) => void
+import {type ExaminationTypeResponse, type ListDoctorByExaminationTypeResponse} from '../api/response'
 
 // TODO: add validate for each input
 
@@ -17,7 +15,7 @@ interface EmployeeInfoContainerType {
     leftIcon?: string
     rightIcon1?: string
     xRegularClick?: MouseEventHandler<HTMLImageElement>
-    saveClick: saveClickHandler
+    saveClick: (khamBenhPayload: KhamBenhPayloadType, benhNhanPayload: BenhNhanPayloadType) => void
 }
 
 const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = ({
@@ -47,8 +45,12 @@ const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = (
     const [reloadListDoctor, setReloadListDoctor] = useState(false)
     const [examinationTypes, setExaminationTypes] = useState<ExaminationTypeResponse>({data: {bac_sy_loai_khamCollection: {edges: []}}})
 
-    const handleReloadBSS = () => {
+    const handleReloadListDoctor = () => {
         setReloadListDoctor(!reloadListDoctor)
+    }
+
+    const handleToggle = (checked: boolean) => {
+        setIsEnableHenLichKham(checked)
     }
 
     // select list loai kham
@@ -56,7 +58,26 @@ const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = (
         new GraphQLClient()
             .Send(QueryListExaminationType())
             .then((response) => {
-                setExaminationTypes(response as ExaminationTypeResponse)
+                const resp = response as ExaminationTypeResponse
+
+                const uniqueLoaiKham = new Set()
+                resp.data.bac_sy_loai_khamCollection.edges =
+                    resp.data
+                        .bac_sy_loai_khamCollection
+                        .edges
+                        .filter(
+                            edge => {
+                                const id = edge.node.loai_kham.id
+                                if (uniqueLoaiKham.has(id)) {
+                                    return false
+                                } else {
+                                    uniqueLoaiKham.add(id)
+                                    return true
+                                }
+                            }
+                        )
+
+                setExaminationTypes(resp)
             }).catch((error) => {
             console.log(error)
         })
@@ -80,17 +101,14 @@ const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = (
         const benhNhanPayload: BenhNhanPayloadType = {email, firstName, lastName, phone}
         const khamBenhPayload: KhamBenhPayloadType = {
             benhNhanID: 'benh_nhan_id',
-            bacSyID: doctorID,
+            doctorID,
             ngayGio: isEnableHenLichKham ? ngayGio : undefined,
             thoiLuong: isEnableHenLichKham ? thoiLuong : undefined,
-            loaiKhamID: examinationTypeID,
+            examinationTypeID,
             note
         }
 
         saveClick(khamBenhPayload, benhNhanPayload)
-    }
-    const handleToggle = (checked: boolean) => {
-        setIsEnableHenLichKham(checked)
     }
 
     return <div
@@ -320,10 +338,8 @@ const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = (
                                         className={'input select-input flex-1 relative leading-[150%] flex items-center h-7'}
                                         value={examinationTypeID}
                                         onChange={(e) => {
-                                            console.log('e.target.value')
-                                            console.log(e.target.value)
                                             setExaminationTypeID(e.target.value)
-                                            handleReloadBSS()
+                                            handleReloadListDoctor()
                                         }}
                                     >
                                         <option
@@ -340,14 +356,6 @@ const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = (
                                             </option>)}
                                     </select>
                                 </div>
-                                {/* <div className="h-5 flex flex-col py-0.5 px-0 box-border items-start justify-start"> */}
-                                {/*  <div className="flex-1 relative box-border w-px border-r-[1px] border-solid border-grey-grey-40-t" /> */}
-                                {/* </div> */}
-                                {/* <img */}
-                                {/*  className="relative w-6 h-6" */}
-                                {/*  alt="" */}
-                                {/*  src="/caretdown.svg" */}
-                                {/* /> */}
                             </div>
                         </div>
 
@@ -382,14 +390,6 @@ const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = (
                                         </option>)}
                                     </select>
                                 </div>
-                                {/* <div className="h-5 flex flex-col py-0.5 px-0 box-border items-start justify-start"> */}
-                                {/*  <div className="flex-1 relative box-border w-px border-r-[1px] border-solid border-grey-grey-40-t" /> */}
-                                {/* </div> */}
-                                {/* <img */}
-                                {/*  className="relative w-6 h-6" */}
-                                {/*  alt="" */}
-                                {/*  src="/caretdown.svg" */}
-                                {/* /> */}
                             </div>
                         </div>
 
@@ -424,13 +424,6 @@ const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = (
                                                         setNgayGioKetThuc(next)
                                                     }}
                                                 />
-                                                {/* <div className="flex flex-row items-center justify-start gap-[1px]"> */}
-                                                {/*    <div className="relative leading-[150%]">03</div> */}
-                                                {/*    <div className="relative leading-[150%]">/</div> */}
-                                                {/*    <div className="relative leading-[150%]">10</div> */}
-                                                {/*    <div className="relative leading-[150%]">/</div> */}
-                                                {/*    <div className="relative leading-[150%]">2022</div> */}
-                                                {/* </div> */}
                                             </div>
                                         </div>
                                         : null}
@@ -455,22 +448,15 @@ const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = (
                                                             }),
                                                             e.target.value
                                                         )
-                                                        const ngayGioKetThuc = new Date(currentDateTimeStr)
-                                                        ngayGioKetThuc.setFullYear(ngayGio.getFullYear(), ngayGio.getMonth(), ngayGio.getDate())
-                                                        if (ngayGioKetThuc.getTime() < ngayGio.getTime()) {
-                                                            ngayGioKetThuc.setDate(ngayGioKetThuc.getDate() + 1)
+                                                        const _ngayGioKetThuc = new Date(currentDateTimeStr)
+                                                        _ngayGioKetThuc.setFullYear(ngayGio.getFullYear(), ngayGio.getMonth(), ngayGio.getDate())
+                                                        if (_ngayGioKetThuc.getTime() < ngayGio.getTime()) {
+                                                            _ngayGioKetThuc.setDate(_ngayGioKetThuc.getDate() + 1)
                                                         }
                                                         setNgayGioKetThuc(new Date(currentDateTimeStr))
-                                                        setThoiLuong(Math.floor((ngayGioKetThuc.getTime() - ngayGio.getTime()) / 1000 / 60))
+                                                        setThoiLuong(Math.floor((_ngayGioKetThuc.getTime() - ngayGio.getTime()) / 1000 / 60))
                                                     }}
                                                 />
-                                                {/* <div className="flex flex-row items-center justify-start gap-[1px]"> */}
-                                                {/*    <div className="relative leading-[150%]">03</div> */}
-                                                {/*    <div className="relative leading-[150%]">/</div> */}
-                                                {/*    <div className="relative leading-[150%]">10</div> */}
-                                                {/*    <div className="relative leading-[150%]">/</div> */}
-                                                {/*    <div className="relative leading-[150%]">2022</div> */}
-                                                {/* </div> */}
                                             </div>
                                         </div>
                                         : null}
