@@ -111,12 +111,37 @@ const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = (
         saveClick(khamBenhPayload, benhNhanPayload)
     }
 
+    const onChangeStartDate = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const now = new Date(e.target.value)
+        setNgayGio(now)
+        const next = new Date(now.getTime() + 30 * 60000)
+        setNgayGioKetThuc(next)
+    }
+
+    const onChangeEndDate = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const currentDateTime = new Date()
+        const currentDateTimeStr = currentDateTime.toString().replaceAll(
+            currentDateTime.toLocaleTimeString('local', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            }),
+            e.target.value
+        )
+        const _ngayGioKetThuc = new Date(currentDateTimeStr)
+        _ngayGioKetThuc.setFullYear(ngayGio.getFullYear(), ngayGio.getMonth(), ngayGio.getDate())
+        if (_ngayGioKetThuc.getTime() < ngayGio.getTime()) {
+            _ngayGioKetThuc.setDate(_ngayGioKetThuc.getDate() + 1)
+        }
+        setNgayGioKetThuc(new Date(currentDateTimeStr))
+        setThoiLuong(Math.floor((_ngayGioKetThuc.getTime() - ngayGio.getTime()) / 1000 / 60))
+    }
+
     return <div
         className="absolute top-[calc(50%_-_328px)] left-[calc(50%_-_350px)] rounded-2xl bg-monochrome-white flex flex-row py-0 px-8 items-start justify-start text-center text-sm text-neutral-grey-700 font-button-button-2">
         <div
             className="self-stretch w-[636px] flex flex-col py-8 px-0 box-border items-center justify-start gap-[32px]">
             <div className="self-stretch flex flex-row items-start justify-between text-blue-blue-400">
-                {/* <img className="relative w-6 h-6" alt="" /> */}
                 <div className="flex-1 flex flex-col items-center justify-center gap-[16px]">
                     <img
                         className="relative w-[100px] h-[100px]"
@@ -417,12 +442,7 @@ const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = (
                                                     className={'input'}
                                                     step={1800}
                                                     value={ToDateTimeFormat(ngayGio)}
-                                                    onChange={(e) => {
-                                                        const now = new Date(e.target.value)
-                                                        setNgayGio(now)
-                                                        const next = new Date(now.getTime() + 30 * 60000)
-                                                        setNgayGioKetThuc(next)
-                                                    }}
+                                                    onChange={onChangeStartDate}
                                                 />
                                             </div>
                                         </div>
@@ -438,24 +458,7 @@ const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = (
                                                     className={'input'}
                                                     step={30 * 60}
                                                     value={ToTimeFormat(ngayGioKetThuc)}
-                                                    onChange={(e) => {
-                                                        const currentDateTime = new Date()
-                                                        const currentDateTimeStr = currentDateTime.toString().replaceAll(
-                                                            currentDateTime.toLocaleTimeString('local', {
-                                                                hour: '2-digit',
-                                                                minute: '2-digit',
-                                                                hour12: false
-                                                            }),
-                                                            e.target.value
-                                                        )
-                                                        const _ngayGioKetThuc = new Date(currentDateTimeStr)
-                                                        _ngayGioKetThuc.setFullYear(ngayGio.getFullYear(), ngayGio.getMonth(), ngayGio.getDate())
-                                                        if (_ngayGioKetThuc.getTime() < ngayGio.getTime()) {
-                                                            _ngayGioKetThuc.setDate(_ngayGioKetThuc.getDate() + 1)
-                                                        }
-                                                        setNgayGioKetThuc(new Date(currentDateTimeStr))
-                                                        setThoiLuong(Math.floor((_ngayGioKetThuc.getTime() - ngayGio.getTime()) / 1000 / 60))
-                                                    }}
+                                                    onChange={onChangeEndDate}
                                                 />
                                             </div>
                                         </div>
