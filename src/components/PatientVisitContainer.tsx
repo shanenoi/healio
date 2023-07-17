@@ -3,13 +3,13 @@ import {type FunctionComponent, type MouseEventHandler} from 'react'
 interface PatientVisitContainerType {
     productIds?: string
     productDimensions?: string
-    onclick?: MouseEventHandler<HTMLDivElement>
+    onclickRegister?: MouseEventHandler<HTMLDivElement>
 }
 
 const PatientVisitContainer: FunctionComponent<PatientVisitContainerType> = ({
                                                                                  productIds,
                                                                                  productDimensions,
-                                                                                 onclick
+                                                                                 onclickRegister
                                                                              }) => {
     return (
         <div
@@ -19,7 +19,7 @@ const PatientVisitContainer: FunctionComponent<PatientVisitContainerType> = ({
             </b>
             <div
                 className="self-stretch flex flex-row items-start justify-start text-center text-base text-monochrome-white cursor-button"
-                onClick={onclick}>
+                onClick={onclickRegister}>
                 <div
                     className="rounded-xl bg-blue-blue-300 w-[400px] h-12 flex flex-row py-2 px-4 box-border items-center justify-center gap-[8px]">
                     <img className="relative w-7 h-7 hidden" alt="" src={productIds}/>
@@ -36,7 +36,7 @@ const PatientVisitContainer: FunctionComponent<PatientVisitContainerType> = ({
 
             <div
                 className="self-stretch flex flex-row items-start justify-start text-center text-base text-monochrome-white cursor-button"
-                onClick={onclick}>
+                onClick={onclickRegister}>
                 <div
                     className="rounded-xl bg-blue-blue-300 w-[400px] h-12 flex flex-row py-2 px-4 box-border items-center justify-center gap-[8px]">
                     <img className="relative w-7 h-7 hidden" alt="" src={productIds}/>
@@ -53,7 +53,7 @@ const PatientVisitContainer: FunctionComponent<PatientVisitContainerType> = ({
 
             <div
                 className="self-stretch flex flex-row items-start justify-start text-center text-base text-monochrome-white cursor-button"
-                onClick={onclick}>
+                onClick={onclickRegister}>
                 <div
                     className="rounded-xl bg-blue-blue-300 w-[400px] h-12 flex flex-row py-2 px-4 box-border items-center justify-center gap-[8px]">
                     <img className="relative w-7 h-7 hidden" alt="" src={productIds}/>

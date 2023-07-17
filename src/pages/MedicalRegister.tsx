@@ -31,7 +31,7 @@ const MedicalRegister: FunctionComponent = () => {
             <PatientVisitContainer
                 productIds="/lefticon9.svg"
                 productDimensions="/lefticon9.svg"
-                onclick={showMedicalRegister}
+                onclickRegister={showMedicalRegister}
             />
             <img
                 className="absolute top-[0px] left-[1000px] w-[845px] h-[1024px]"
