@@ -1,5 +1,5 @@
 import {type FunctionComponent, useState} from 'react'
-import {type LoginPayloadType} from '../api/request'
+import {type LoginPayloadType} from '../api/types'
 
 interface LoginContainerType {
     loginClick: (loginPayload: LoginPayloadType) => void

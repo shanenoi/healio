@@ -1,10 +1,8 @@
-import {ANON_API_KEY} from '../api/graphql'
 import {Auth} from '@supabase/auth-ui-react'
 import {ThemeSupa} from '@supabase/auth-ui-shared'
-import {createClient, type User} from '@supabase/supabase-js'
+import {supabaseClient} from '../utils/supabaseClient'
 import {type FunctionComponent, useEffect, useState} from 'react'
-
-const supabaseClient = createClient('https://ykeknooiaudhzsxuvrhy.supabase.co', ANON_API_KEY)
+import {type User} from '@supabase/supabase-js'
 
 const LogIn: FunctionComponent = () => {
     const confirmationText = 'Đã gửi'

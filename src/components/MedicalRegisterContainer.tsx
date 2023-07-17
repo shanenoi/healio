@@ -1,10 +1,11 @@
 import React, {type FunctionComponent, type MouseEventHandler, useEffect, useState} from 'react'
 import ToggleSwitch from './ToggleSwitch'
-import {GraphQLClient} from '../api/graphql'
 import {QueryListDoctorByExaminationType, QueryListExaminationType} from '../api/graphql_query'
 import {ToDateTimeFormat, ToTimeFormat} from '../utils/utils'
-import {type BenhNhanPayloadType, type KhamBenhPayloadType} from '../api/request'
+import {getAuthUser, GraphQLClient, supabaseClient} from '../utils/supabaseClient'
 import {type ExaminationTypeResponse, type ListDoctorByExaminationTypeResponse} from '../api/response'
+import {type KhamBenhPayloadType, type PatientData} from '../api/types'
+import {type Profiles, ProfilesTable} from '../utils/supabaseTypes'
 
 // TODO: add validate for each input
 
@@ -15,7 +16,7 @@ interface EmployeeInfoContainerType {
     leftIcon?: string
     rightIcon1?: string
     xRegularClick?: MouseEventHandler<HTMLImageElement>
-    saveClick: (khamBenhPayload: KhamBenhPayloadType, benhNhanPayload: BenhNhanPayloadType) => void
+    saveClick: (khamBenhPayload: KhamBenhPayloadType, benhNhanPayload: PatientData) => void
 }
 
 const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = ({
@@ -44,6 +45,7 @@ const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = (
     const [listDoctor, setListDoctor] = useState<ListDoctorByExaminationTypeResponse>({data: {bac_sy_loai_khamCollection: {edges: []}}})
     const [reloadListDoctor, setReloadListDoctor] = useState(false)
     const [examinationTypes, setExaminationTypes] = useState<ExaminationTypeResponse>({data: {bac_sy_loai_khamCollection: {edges: []}}})
+    const [patient, setPatient] = useState<Profiles>(null)
 
     const handleReloadListDoctor = () => {
         setReloadListDoctor(!reloadListDoctor)
@@ -52,6 +54,26 @@ const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = (
     const handleToggle = (checked: boolean) => {
         setIsEnableHenLichKham(checked)
     }
+
+    // get user info
+    useEffect(() => {
+        getAuthUser()
+            .then(async user => {
+                if (user === null) {
+                    return
+                }
+
+                const data = await supabaseClient
+                    .from(ProfilesTable)
+                    .select('*')
+                    .eq('id', user.id)
+                    .single()
+                setPatient(data.data as Profiles)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }, [])
 
     // select list loai kham
     useEffect(() => {
@@ -98,9 +120,9 @@ const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = (
     }, [reloadListDoctor])
 
     const onSaveClick = () => {
-        const benhNhanPayload: BenhNhanPayloadType = {email, firstName, lastName, phone}
+        const benhNhanPayload: PatientData = {email, firstName, lastName, phone}
         const khamBenhPayload: KhamBenhPayloadType = {
-            benhNhanID: 'benh_nhan_id',
+            patientID: patient?.id ?? '',
             doctorID,
             ngayGio: isEnableHenLichKham ? ngayGio : undefined,
             thoiLuong: isEnableHenLichKham ? thoiLuong : undefined,
@@ -185,8 +207,9 @@ const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = (
                                         <input
                                             type="text"
                                             className={'input'}
-                                            placeholder={'Văn A'}
-                                            value={firstName}
+                                            // placeholder={'Văn A'}
+                                            value={patient?.first_name ?? ''}
+                                            disabled={true}
                                             onChange={(e) => {
                                                 setFirstName(e.target.value)
                                             }}
@@ -230,8 +253,9 @@ const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = (
                                         <input
                                             type="text"
                                             className={'input'}
-                                            placeholder={'Nguyễn'}
-                                            value={lastName}
+                                            placeholder={'--'}
+                                            value={patient?.last_name ?? ''}
+                                            disabled={true}
                                             onChange={(e) => {
                                                 setLastName(e.target.value)
                                             }}
@@ -277,8 +301,9 @@ const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = (
                                         <input
                                             type="number"
                                             className={'input no-arrows'}
-                                            placeholder={'0123456789'}
-                                            value={phone}
+                                            placeholder={'--'}
+                                            value={patient?.phone ?? ''}
+                                            disabled={true}
                                             onChange={(e) => {
                                                 setPhone(e.target.value)
                                             }}
@@ -322,8 +347,9 @@ const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = (
                                         <input
                                             type="email"
                                             className={'input'}
-                                            placeholder={'email@gmail.com'}
-                                            value={email}
+                                            placeholder={'--'}
+                                            value={patient?.email ?? ''}
+                                            disabled={true}
                                             onChange={(e) => {
                                                 setEmail(e.target.value)
                                             }}

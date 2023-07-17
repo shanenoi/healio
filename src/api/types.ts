@@ -1,5 +1,5 @@
 export interface KhamBenhPayloadType {
-    benhNhanID: string
+    patientID: string
     doctorID: string
     ngayGio?: Date
     thoiLuong?: number
@@ -7,7 +7,7 @@ export interface KhamBenhPayloadType {
     note: string
 }
 
-export interface BenhNhanPayloadType {
+export interface PatientData {
     email: string
     firstName: string
     lastName: string

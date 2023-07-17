@@ -41,24 +41,7 @@ const PatientVisitContainer: FunctionComponent<PatientVisitContainerType> = ({
                     className="rounded-xl bg-blue-blue-300 w-[400px] h-12 flex flex-row py-2 px-4 box-border items-center justify-center gap-[8px]">
                     <img className="relative w-7 h-7 hidden" alt="" src={productIds}/>
                     <div className="relative leading-[150%] font-semibold">
-                        ĐĂNG KÝ KHÁM BỆNH
-                    </div>
-                    <img
-                        className="relative w-7 h-7 hidden"
-                        alt=""
-                        src={productDimensions}
-                    />
-                </div>
-            </div>
-
-            <div
-                className="self-stretch flex flex-row items-start justify-start text-center text-base text-monochrome-white cursor-button"
-                onClick={onclickRegister}>
-                <div
-                    className="rounded-xl bg-blue-blue-300 w-[400px] h-12 flex flex-row py-2 px-4 box-border items-center justify-center gap-[8px]">
-                    <img className="relative w-7 h-7 hidden" alt="" src={productIds}/>
-                    <div className="relative leading-[150%] font-semibold">
-                        ĐĂNG KÝ KHÁM BỆNH
+                        XEM HỒ SƠ CÁ NHÂN
                     </div>
                     <img
                         className="relative w-7 h-7 hidden"

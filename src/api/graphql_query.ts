@@ -1,4 +1,4 @@
-import {type GraphQLQueryProps} from './graphql'
+import {type GraphQLQueryProps} from '../utils/supabaseClient'
 
 export const QueryListDoctorByExaminationType = (loaiKhamID: string) => {
     const q: GraphQLQueryProps = {
