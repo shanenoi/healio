@@ -11,7 +11,6 @@ export interface Database {
         Tables: {
             bac_sy: {
                 Row: {
-                    anh_dai_dien: string | null
                     chuyen_khoa: string | null
                     created_at: string | null
                     deleted_at: string | null
@@ -20,7 +19,6 @@ export interface Database {
                     user_id: string | null
                 }
                 Insert: {
-                    anh_dai_dien?: string | null
                     chuyen_khoa?: string | null
                     created_at?: string | null
                     deleted_at?: string | null
@@ -29,7 +27,6 @@ export interface Database {
                     user_id?: string | null
                 }
                 Update: {
-                    anh_dai_dien?: string | null
                     chuyen_khoa?: string | null
                     created_at?: string | null
                     deleted_at?: string | null
@@ -174,7 +171,6 @@ export interface Database {
             }
             benh_nhan: {
                 Row: {
-                    anh_dai_dien: string | null
                     bhyt: string | null
                     created_at: string | null
                     deleted_at: string | null
@@ -183,7 +179,6 @@ export interface Database {
                     user_id: string | null
                 }
                 Insert: {
-                    anh_dai_dien?: string | null
                     bhyt?: string | null
                     created_at?: string | null
                     deleted_at?: string | null
@@ -192,7 +187,6 @@ export interface Database {
                     user_id?: string | null
                 }
                 Update: {
-                    anh_dai_dien?: string | null
                     bhyt?: string | null
                     created_at?: string | null
                     deleted_at?: string | null
@@ -216,7 +210,8 @@ export interface Database {
                     id: string
                     kham_benh_id: string
                     phuong_thuc: string
-                    so_tien: number
+                    tien_kham: number | null
+                    tong_so_tien: number
                     trang_thai: string
                     updated_at: string | null
                 }
@@ -226,7 +221,8 @@ export interface Database {
                     id?: string
                     kham_benh_id: string
                     phuong_thuc: string
-                    so_tien: number
+                    tien_kham?: number | null
+                    tong_so_tien: number
                     trang_thai: string
                     updated_at?: string | null
                 }
@@ -236,7 +232,8 @@ export interface Database {
                     id?: string
                     kham_benh_id?: string
                     phuong_thuc?: string
-                    so_tien?: number
+                    tien_kham?: number | null
+                    tong_so_tien?: number
                     trang_thai?: string
                     updated_at?: string | null
                 }
@@ -255,6 +252,7 @@ export interface Database {
                     benh_nhan_id: string
                     created_at: string | null
                     deleted_at: string | null
+                    duration: number | null
                     id: string
                     loai_kham_id: string
                     ngay_gio: string
@@ -268,6 +266,7 @@ export interface Database {
                     benh_nhan_id: string
                     created_at?: string | null
                     deleted_at?: string | null
+                    duration?: number | null
                     id?: string
                     loai_kham_id: string
                     ngay_gio: string
@@ -281,6 +280,7 @@ export interface Database {
                     benh_nhan_id?: string
                     created_at?: string | null
                     deleted_at?: string | null
+                    duration?: number | null
                     id?: string
                     loai_kham_id?: string
                     ngay_gio?: string
@@ -336,6 +336,7 @@ export interface Database {
             }
             profiles: {
                 Row: {
+                    avatar: string | null
                     created_at: string | null
                     deleted_at: string | null
                     email: string | null
@@ -347,6 +348,7 @@ export interface Database {
                     user_type: string | null
                 }
                 Insert: {
+                    avatar?: string | null
                     created_at?: string | null
                     deleted_at?: string | null
                     email?: string | null
@@ -358,6 +360,7 @@ export interface Database {
                     user_type?: string | null
                 }
                 Update: {
+                    avatar?: string | null
                     created_at?: string | null
                     deleted_at?: string | null
                     email?: string | null
