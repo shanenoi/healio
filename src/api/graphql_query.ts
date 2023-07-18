@@ -9,7 +9,6 @@ export const QueryListDoctorByExaminationType = (loaiKhamID: string) => {
                   node {
                     bac_sy {
                       chuyen_khoa
-                      anh_dai_dien
                       profiles {
                         id
                         first_name

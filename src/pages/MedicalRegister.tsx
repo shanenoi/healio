@@ -53,7 +53,7 @@ const MedicalRegister: FunctionComponent = () => {
                     leftIcon="/lefticon8.svg"
                     rightIcon1="/lefticon8.svg"
                     xRegularClick={hideMedicalRegister}
-                    saveClick={(k, b) => {
+                    saveClick={(k) => {
                         console.log('\n===========================')
                         console.log(`k.benhNhanID ${k.patientID}`)
                         console.log(`k.bacSyID ${k.doctorID}`)
@@ -61,11 +61,6 @@ const MedicalRegister: FunctionComponent = () => {
                         console.log(`k.thoiLuong ${(k.thoiLuong === undefined ? '' : k.thoiLuong)}`)
                         console.log(`k.loaiKhamID ${k.examinationTypeID}`)
                         console.log(`k.note ${k.note}`)
-
-                        console.log(`b.email ${b.email}`)
-                        console.log(`b.firstName ${b.firstName}`)
-                        console.log(`b.lastName ${b.lastName}`)
-                        console.log(`b.phone ${b.phone}`)
                         console.log('===========================')
                     }}/>
             )}

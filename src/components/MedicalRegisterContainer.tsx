@@ -4,7 +4,7 @@ import {QueryListDoctorByExaminationType, QueryListExaminationType} from '../api
 import {ToDateTimeFormat, ToTimeFormat} from '../utils/utils'
 import {getAuthUser, GraphQLClient, supabaseClient} from '../utils/supabaseClient'
 import {type ExaminationTypeResponse, type ListDoctorByExaminationTypeResponse} from '../api/response'
-import {type KhamBenhPayloadType, type PatientData} from '../api/types'
+import {type KhamBenhPayloadType} from '../api/types'
 import {type Profiles, ProfilesTable} from '../utils/supabaseTypes'
 
 // TODO: add validate for each input
@@ -16,7 +16,7 @@ interface EmployeeInfoContainerType {
     leftIcon?: string
     rightIcon1?: string
     xRegularClick?: MouseEventHandler<HTMLImageElement>
-    saveClick: (khamBenhPayload: KhamBenhPayloadType, benhNhanPayload: PatientData) => void
+    saveClick: (khamBenhPayload: KhamBenhPayloadType) => void
 }
 
 const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = ({
@@ -35,11 +35,7 @@ const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = (
     const [ngayGio, setNgayGio] = useState(new Date())
     const [ngayGioKetThuc, setNgayGioKetThuc] = useState(new Date())
     const [thoiLuong, setThoiLuong] = useState(0)
-    const [firstName, setFirstName] = useState('')
-    const [lastName, setLastName] = useState('')
-    const [phone, setPhone] = useState('')
     const [note, setNote] = useState('')
-    const [email, setEmail] = useState('')
     const [examinationTypeID, setExaminationTypeID] = useState(nullExaminationTypeID)
     const [doctorID, setDoctorID] = useState(nullBacSiID)
     const [listDoctor, setListDoctor] = useState<ListDoctorByExaminationTypeResponse>({data: {bac_sy_loai_khamCollection: {edges: []}}})
@@ -120,7 +116,6 @@ const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = (
     }, [reloadListDoctor])
 
     const onSaveClick = () => {
-        const benhNhanPayload: PatientData = {email, firstName, lastName, phone}
         const khamBenhPayload: KhamBenhPayloadType = {
             patientID: patient?.id ?? '',
             doctorID,
@@ -130,7 +125,7 @@ const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = (
             note
         }
 
-        saveClick(khamBenhPayload, benhNhanPayload)
+        saveClick(khamBenhPayload)
     }
 
     const onChangeStartDate = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -210,9 +205,6 @@ const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = (
                                             // placeholder={'Văn A'}
                                             value={patient?.first_name ?? ''}
                                             disabled={true}
-                                            onChange={(e) => {
-                                                setFirstName(e.target.value)
-                                            }}
                                         />
                                     </div>
                                     <img
@@ -256,9 +248,6 @@ const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = (
                                             placeholder={'--'}
                                             value={patient?.last_name ?? ''}
                                             disabled={true}
-                                            onChange={(e) => {
-                                                setLastName(e.target.value)
-                                            }}
                                         />
                                     </div>
                                     <img
@@ -304,9 +293,6 @@ const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = (
                                             placeholder={'--'}
                                             value={patient?.phone ?? ''}
                                             disabled={true}
-                                            onChange={(e) => {
-                                                setPhone(e.target.value)
-                                            }}
                                         />
                                     </div>
                                     <img
@@ -350,9 +336,6 @@ const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = (
                                             placeholder={'--'}
                                             value={patient?.email ?? ''}
                                             disabled={true}
-                                            onChange={(e) => {
-                                                setEmail(e.target.value)
-                                            }}
                                         />
                                     </div>
                                     <img
