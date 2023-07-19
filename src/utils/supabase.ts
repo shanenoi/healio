@@ -250,42 +250,48 @@ export interface Database {
                 Row: {
                     bac_sy_id: string
                     benh_nhan_id: string
+                    cancel_at: string | null
                     created_at: string | null
                     deleted_at: string | null
-                    duration: number | null
+                    duration: number
                     id: string
+                    is_scheduled: boolean
                     loai_kham_id: string
-                    ngay_gio: string
+                    ngay_gio: string | null
                     note: string | null
-                    so_thu_tu: number
+                    so_thu_tu: number | null
                     trang_thai: string
                     updated_at: string | null
                 }
                 Insert: {
                     bac_sy_id: string
                     benh_nhan_id: string
+                    cancel_at?: string | null
                     created_at?: string | null
                     deleted_at?: string | null
-                    duration?: number | null
+                    duration?: number
                     id?: string
+                    is_scheduled?: boolean
                     loai_kham_id: string
-                    ngay_gio: string
+                    ngay_gio?: string | null
                     note?: string | null
-                    so_thu_tu: number
+                    so_thu_tu?: number | null
                     trang_thai: string
                     updated_at?: string | null
                 }
                 Update: {
                     bac_sy_id?: string
                     benh_nhan_id?: string
+                    cancel_at?: string | null
                     created_at?: string | null
                     deleted_at?: string | null
-                    duration?: number | null
+                    duration?: number
                     id?: string
+                    is_scheduled?: boolean
                     loai_kham_id?: string
-                    ngay_gio?: string
+                    ngay_gio?: string | null
                     note?: string | null
-                    so_thu_tu?: number
+                    so_thu_tu?: number | null
                     trang_thai?: string
                     updated_at?: string | null
                 }

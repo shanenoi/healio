@@ -1,6 +1,7 @@
 import MedicalRegisterContainer from '../components/MedicalRegisterContainer'
 import PatientVisitContainer from '../components/PatientVisitContainer'
 import {type FunctionComponent, useRef, useState} from 'react'
+import {v4 as uuidv4} from 'uuid'
 
 const MedicalRegister: FunctionComponent = () => {
     const blurBackgroundRef = useRef(null)
@@ -43,7 +44,7 @@ const MedicalRegister: FunctionComponent = () => {
                 ref={blurBackgroundRef}
                 style={{visibility: 'hidden'}}
                 className="absolute top-[calc(50%_-_512px)] left-[0px] bg-blur-background w-[100%] h-[1024px]"
-                // onClick={hideMedicalRegister}
+                onClick={hideMedicalRegister}
             />
             {showMedicalRegisterContainer && (
                 <MedicalRegisterContainer
@@ -52,17 +53,10 @@ const MedicalRegister: FunctionComponent = () => {
                     xRegular="/x-regular3.svg"
                     leftIcon="/lefticon8.svg"
                     rightIcon1="/lefticon8.svg"
-                    xRegularClick={hideMedicalRegister}
-                    saveClick={(k) => {
-                        console.log('\n===========================')
-                        console.log(`k.benhNhanID ${k.patientID}`)
-                        console.log(`k.bacSyID ${k.doctorID}`)
-                        console.log(`k.ngayGio ${(k.ngayGio === undefined ? '' : k.ngayGio.toISOString())}`)
-                        console.log(`k.thoiLuong ${(k.thoiLuong === undefined ? '' : k.thoiLuong)}`)
-                        console.log(`k.loaiKhamID ${k.examinationTypeID}`)
-                        console.log(`k.note ${k.note}`)
-                        console.log('===========================')
-                    }}/>
+                    onCloseClick={hideMedicalRegister}
+                    onCloseClickV2={hideMedicalRegister}
+                    formID={uuidv4()}
+                />
             )}
         </div>
     )

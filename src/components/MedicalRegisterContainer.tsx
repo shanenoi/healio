@@ -1,13 +1,15 @@
-import React, {type FunctionComponent, type MouseEventHandler, useEffect, useState} from 'react'
+import React, {type FunctionComponent, useEffect, useState} from 'react'
 import ToggleSwitch from './ToggleSwitch'
 import {QueryListDoctorByExaminationType, QueryListExaminationType} from '../api/graphql_query'
 import {ToDateTimeFormat, ToTimeFormat} from '../utils/utils'
 import {getAuthUser, GraphQLClient, supabaseClient} from '../utils/supabaseClient'
 import {type ExaminationTypeResponse, type ListDoctorByExaminationTypeResponse} from '../api/response'
-import {type KhamBenhPayloadType} from '../api/types'
-import {type Profiles, ProfilesTable} from '../utils/supabaseTypes'
+import {type KhamBenh, KhamBenhTable, type Profiles, ProfilesTable} from '../utils/supabaseTypes'
 
 // TODO: add validate for each input
+
+// move it to config files .ts
+const defaultThoiLuong = 30
 
 interface EmployeeInfoContainerType {
     maskGroup?: string
@@ -15,8 +17,8 @@ interface EmployeeInfoContainerType {
     xRegular?: string
     leftIcon?: string
     rightIcon1?: string
-    xRegularClick?: MouseEventHandler<HTMLImageElement>
-    saveClick: (khamBenhPayload: KhamBenhPayloadType) => void
+    onCloseClickV2: () => void
+    formID: string
 }
 
 const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = ({
@@ -25,8 +27,8 @@ const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = (
                                                                                     xRegular,
                                                                                     leftIcon,
                                                                                     rightIcon1,
-                                                                                    xRegularClick,
-                                                                                    saveClick
+                                                                                    onCloseClickV2,
+                                                                                    formID
                                                                                 }) => {
     const nullExaminationTypeID = 'Chọn loại'
     const nullBacSiID = 'Chọn Bác Sĩ'
@@ -116,22 +118,51 @@ const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = (
     }, [reloadListDoctor])
 
     const onSaveClick = () => {
-        const khamBenhPayload: KhamBenhPayloadType = {
-            patientID: patient?.id ?? '',
-            doctorID,
-            ngayGio: isEnableHenLichKham ? ngayGio : undefined,
-            thoiLuong: isEnableHenLichKham ? thoiLuong : undefined,
-            examinationTypeID,
+        if (patient === null) {
+            return
+        }
+
+        const khamBenh: KhamBenh = {
+            id: formID,
+            so_thu_tu: 0,
+            trang_thai: '',
+            created_at: null,
+            updated_at: null,
+            deleted_at: null,
+            cancel_at: null,
+
+            bac_sy_id: doctorID,
+            benh_nhan_id: patient.id,
+            loai_kham_id: examinationTypeID,
+            duration: isEnableHenLichKham ? thoiLuong : defaultThoiLuong,
+            ngay_gio: isEnableHenLichKham ? ngayGio.toISOString() : null,
+            is_scheduled: isEnableHenLichKham,
             note
         }
 
-        saveClick(khamBenhPayload)
+        void supabaseClient
+            .from(KhamBenhTable)
+            .insert(khamBenh)
+            .then(r => {
+                console.log(r)
+            })
+
+        console.log('\n===========================')
+        console.log(`khamBenh.bac_sy_id ${khamBenh.bac_sy_id}`)
+        console.log(`khamBenh.benh_nhan_id ${khamBenh.benh_nhan_id}`)
+        console.log(`khamBenh.loai_kham_id ${khamBenh.loai_kham_id}`)
+        console.log(`khamBenh.duration ${khamBenh.duration ?? ''}`)
+        console.log(`khamBenh.ngay_gio ${khamBenh.ngay_gio ?? ''}`)
+        console.log(`khamBenh.note ${khamBenh.note ?? ''}`)
+        console.log('===========================')
+
+        onCloseClickV2()
     }
 
     const onChangeStartDate = (e: React.ChangeEvent<HTMLInputElement>) => {
         const now = new Date(e.target.value)
         setNgayGio(now)
-        const next = new Date(now.getTime() + 30 * 60000)
+        const next = new Date(now.getTime() + defaultThoiLuong * 60000)
         setNgayGioKetThuc(next)
     }
 
@@ -174,7 +205,7 @@ const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = (
                         <img className="relative w-6 h-6 hidden" alt="" src={rightIcon}/>
                     </div>
                 </div>
-                <img className="relative w-6 h-6 cursor-button" alt="" src={xRegular} onClick={xRegularClick}/>
+                <img className="relative w-6 h-6 cursor-button" alt="" src={xRegular} onClick={onCloseClickV2}/>
             </div>
             <div className="self-stretch flex flex-col items-start justify-start gap-[16px] text-left text-base">
                 <div className="relative font-medium">Thông tin bệnh nhân</div>
@@ -465,7 +496,7 @@ const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = (
                                                 <input
                                                     type={'time'}
                                                     className={'input'}
-                                                    step={30 * 60}
+                                                    step={defaultThoiLuong * 60}
                                                     value={ToTimeFormat(ngayGioKetThuc)}
                                                     onChange={onChangeEndDate}
                                                 />
