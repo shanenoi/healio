@@ -53,7 +53,6 @@ const MedicalRegister: FunctionComponent = () => {
                     xRegular="/x-regular3.svg"
                     leftIcon="/lefticon8.svg"
                     rightIcon1="/lefticon8.svg"
-                    onCloseClick={hideMedicalRegister}
                     onCloseClickV2={hideMedicalRegister}
                     formID={uuidv4()}
                 />

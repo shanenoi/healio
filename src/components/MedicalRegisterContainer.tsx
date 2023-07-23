@@ -1,5 +1,6 @@
 import React, {type FunctionComponent, useEffect, useState} from 'react'
 import ToggleSwitch from './ToggleSwitch'
+import axios from 'axios'
 import {QueryListDoctorByExaminationType, QueryListExaminationType} from '../api/graphql_query'
 import {ToDateTimeFormat, ToTimeFormat} from '../utils/utils'
 import {getAuthUser, GraphQLClient, supabaseClient} from '../utils/supabaseClient'
@@ -8,7 +9,7 @@ import {type KhamBenh, KhamBenhTable, type Profiles, ProfilesTable} from '../uti
 
 // TODO: add validate for each input
 
-// move it to config files .ts
+// TODO: move it to config files .ts
 const defaultThoiLuong = 30
 
 interface EmployeeInfoContainerType {
@@ -19,6 +20,17 @@ interface EmployeeInfoContainerType {
     rightIcon1?: string
     onCloseClickV2: () => void
     formID: string
+}
+
+const reloadEvents = async () => {
+    const config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: 'http://localhost:6290/order-event',
+        headers: {}
+    }
+
+    return await axios.request(config)
 }
 
 const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = ({
@@ -122,13 +134,11 @@ const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = (
             return
         }
 
+        const now = new Date()
         const khamBenh: KhamBenh = {
             id: formID,
             so_thu_tu: 0,
             trang_thai: '',
-            created_at: null,
-            updated_at: null,
-            deleted_at: null,
             cancel_at: null,
 
             bac_sy_id: doctorID,
@@ -137,7 +147,11 @@ const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = (
             duration: isEnableHenLichKham ? thoiLuong : defaultThoiLuong,
             ngay_gio: isEnableHenLichKham ? ngayGio.toISOString() : null,
             is_scheduled: isEnableHenLichKham,
-            note
+            note,
+
+            created_at: now.toISOString(),
+            updated_at: now.toISOString(),
+            deleted_at: null
         }
 
         void supabaseClient
@@ -145,6 +159,11 @@ const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = (
             .insert(khamBenh)
             .then(r => {
                 console.log(r)
+                reloadEvents().then(r => {
+                    console.log(r)
+                }).catch(err => {
+                    console.log(err)
+                })
             })
 
         console.log('\n===========================')
@@ -162,8 +181,9 @@ const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = (
     const onChangeStartDate = (e: React.ChangeEvent<HTMLInputElement>) => {
         const now = new Date(e.target.value)
         setNgayGio(now)
-        const next = new Date(now.getTime() + defaultThoiLuong * 60000)
-        setNgayGioKetThuc(next)
+        const _ngayGioKetThuc = new Date(now.getTime() + defaultThoiLuong * 60000)
+        setNgayGioKetThuc(_ngayGioKetThuc)
+        setThoiLuong(Math.floor((ngayGioKetThuc.getTime() - ngayGio.getTime()) / 1000 / 60))
     }
 
     const onChangeEndDate = (e: React.ChangeEvent<HTMLInputElement>) => {
