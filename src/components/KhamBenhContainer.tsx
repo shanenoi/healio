@@ -4,18 +4,20 @@ import {type Property} from 'csstype'
 import {type Profiles} from '../utils/supabaseTypes'
 
 interface TaiMuiHongContainerType {
+    ID: string
     OrderNumber: number
     StartAt: Date
     Duration: number
     TypeAccess: string
     profile: Profiles
-    ActionsCallback: (OrderNumber: number) => void
+    ActionsCallback: (id: string) => void
 
     /** Style props */
     propColor?: Property.Color
 }
 
 const KhamBenhContainer: FunctionComponent<TaiMuiHongContainerType> = ({
+                                                                           ID,
                                                                            OrderNumber,
                                                                            StartAt,
                                                                            Duration,
@@ -30,7 +32,7 @@ const KhamBenhContainer: FunctionComponent<TaiMuiHongContainerType> = ({
         }
     }, [propColor])
     const actionsClick = () => {
-        ActionsCallback(OrderNumber)
+        ActionsCallback(ID)
     }
 
     return (

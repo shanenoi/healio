@@ -13,13 +13,12 @@ import {type KhamBenh, KhamBenhTable, type Profiles, ProfilesTable} from '../uti
 const defaultThoiLuong = 30
 
 interface EmployeeInfoContainerType {
-    maskGroup?: string
-    rightIcon?: string
-    xRegular?: string
-    leftIcon?: string
-    rightIcon1?: string
+    formID?: string
+    StartAt?: Date
+    Duration?: number
+    loaiKhamE?: string
+    noteE?: string
     onCloseClickV2: () => void
-    formID: string
 }
 
 const reloadEvents = async () => {
@@ -34,17 +33,17 @@ const reloadEvents = async () => {
 }
 
 const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = ({
-                                                                                    maskGroup,
-                                                                                    rightIcon,
-                                                                                    xRegular,
-                                                                                    leftIcon,
-                                                                                    rightIcon1,
-                                                                                    onCloseClickV2,
-                                                                                    formID
+                                                                                    formID,
+                                                                                    StartAt,
+                                                                                    Duration,
+                                                                                    loaiKhamE,
+                                                                                    noteE,
+                                                                                    onCloseClickV2
                                                                                 }) => {
     const nullExaminationTypeID = 'Chọn loại'
     const nullBacSiID = 'Chọn Bác Sĩ'
 
+    const [isViewOnly] = useState(formID === undefined)
     const [isEnableHenLichKham, setIsEnableHenLichKham] = useState(false)
     const [ngayGio, setNgayGio] = useState(new Date())
     const [ngayGioKetThuc, setNgayGioKetThuc] = useState(new Date())
@@ -134,6 +133,10 @@ const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = (
             return
         }
 
+        if (formID === undefined) {
+            return
+        }
+
         const now = new Date()
         const khamBenh: KhamBenh = {
             id: formID,
@@ -214,18 +217,21 @@ const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = (
                     <img
                         className="relative w-[100px] h-[100px]"
                         alt=""
-                        src={maskGroup}
+                        src={'/mask-group4.svg'}
                     />
-                    <div
-                        className="rounded-lg bg-monochrome-white box-border h-8 flex flex-row py-2 px-4 items-center justify-center gap-[8px] border-[1px] border-solid border-blue-blue-400">
-                        <img className="relative w-4 h-4" alt="" src="/lefticon1.svg"/>
-                        <div className="relative leading-[150%] uppercase font-medium">
-                            chọn ảnh
+                    {!isViewOnly && (
+                        <div
+                            className="rounded-lg bg-monochrome-white box-border h-8 flex flex-row py-2 px-4 items-center justify-center gap-[8px] border-[1px] border-solid border-blue-blue-400">
+                            <img className="relative w-4 h-4" alt="" src="/lefticon1.svg"/>
+                            <div className="relative leading-[150%] uppercase font-medium">
+                                chọn ảnh
+                            </div>
+                            <img className="relative w-6 h-6 hidden" alt="" src={'/righticon4.svg'}/>
                         </div>
-                        <img className="relative w-6 h-6 hidden" alt="" src={rightIcon}/>
-                    </div>
+                    )}
                 </div>
-                <img className="relative w-6 h-6 cursor-button" alt="" src={xRegular} onClick={onCloseClickV2}/>
+                <img className="relative w-6 h-6 cursor-button" alt="" src={'/x-regular3.svg'}
+                     onClick={onCloseClickV2}/>
             </div>
             <div className="self-stretch flex flex-col items-start justify-start gap-[16px] text-left text-base">
                 <div className="relative font-medium">Thông tin bệnh nhân</div>
@@ -419,116 +425,174 @@ const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = (
                             <div
                                 className="self-stretch rounded-lg bg-monochrome-white box-border h-10 flex flex-row py-2 pr-2 pl-4 items-center justify-start gap-[6px] text-sm text-grey-grey-300-s border-[1px] border-solid border-grey-grey-40-t">
                                 <div className="flex-1 relative leading-[150%] flex items-center h-4">
-                                    <select
-                                        className={'input select-input flex-1 relative leading-[150%] flex items-center h-7'}
-                                        value={examinationTypeID}
-                                        onChange={(e) => {
-                                            setExaminationTypeID(e.target.value)
-                                            handleReloadListDoctor()
-                                        }}
-                                    >
-                                        <option
-                                            className={'select-input-option'}
-                                            value={nullExaminationTypeID} disabled>{nullExaminationTypeID}
-                                        </option>
-                                        {examinationTypes.data.bac_sy_loai_khamCollection.edges.map((loadKham) =>
-                                            <option
-                                                className={'select-input-option'}
-                                                value={loadKham.node.loai_kham.id}
-                                                key={loadKham.node.loai_kham.id}
-                                            >
-                                                {loadKham.node.loai_kham.ten}
-                                            </option>)}
-                                    </select>
+                                    {
+                                        isViewOnly
+                                            ? (
+                                                <div className="flex flex-row items-center justify-start gap-[1px]">
+                                                    <div className="relative leading-[150%]">{loaiKhamE}</div>
+                                                </div>
+                                            )
+                                            : (
+                                                <select
+                                                    className={'input select-input flex-1 relative leading-[150%] flex items-center h-7'}
+                                                    value={examinationTypeID}
+                                                    onChange={(e) => {
+                                                        setExaminationTypeID(e.target.value)
+                                                        handleReloadListDoctor()
+                                                    }}
+                                                >
+                                                    <option
+                                                        className={'select-input-option'}
+                                                        value={nullExaminationTypeID} disabled>{nullExaminationTypeID}
+                                                    </option>
+                                                    {examinationTypes.data.bac_sy_loai_khamCollection.edges.map((loadKham) =>
+                                                        <option
+                                                            className={'select-input-option'}
+                                                            value={loadKham.node.loai_kham.id}
+                                                            key={loadKham.node.loai_kham.id}
+                                                        >
+                                                            {loadKham.node.loai_kham.ten}
+                                                        </option>)}
+                                                </select>
+                                            )
+                                    }
                                 </div>
                             </div>
                         </div>
 
-                        <div className="w-[310px] flex flex-col items-start justify-start">
-                            <div className="flex flex-row items-start justify-start gap-[2px]">
-                                <div className="relative leading-[150%]">Bác Sĩ</div>
-                                <div
-                                    className="relative text-xl leading-[24px] font-semibold font-mobile-body-subtitle-2 text-red-red-400">
-                                    *
-                                </div>
-                            </div>
-                            <div
-                                className="self-stretch rounded-lg bg-monochrome-white box-border h-10 flex flex-row py-2 pr-2 pl-4 items-center justify-start gap-[6px] text-sm text-grey-grey-300-s border-[1px] border-solid border-grey-grey-40-t">
-                                <div className="flex-1 relative leading-[150%] flex items-center h-4">
-                                    <select
-                                        className={'input select-input flex-1 relative leading-[150%] flex items-center h-7'}
-                                        value={doctorID}
-                                        onChange={(e) => {
-                                            setDoctorID(e.target.value)
-                                        }}
-                                    >
-                                        <option
-                                            className={'select-input-option'}
-                                            value={nullBacSiID} disabled>{nullBacSiID}
-                                        </option>
-                                        {listDoctor.data.bac_sy_loai_khamCollection.edges.map((bacSi) => <option
-                                            className={'select-input-option'}
-                                            value={bacSi.node.bac_sy.profiles.id}
-                                            key={bacSi.node.bac_sy.profiles.id}
-                                        >
-                                            {bacSi.node.bac_sy.profiles.first_name} {bacSi.node.bac_sy.profiles.last_name}
-                                        </option>)}
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="w-[310px] flex flex-col items-start justify-start gap-[6px]">
-                            <div className="flex flex-row items-start justify-start gap-[2px]">
-                                <div className="relative leading-[150%]">Hẹn ngày khám
-                                </div>
-                                <ToggleSwitch checked={isEnableHenLichKham} onChange={handleToggle}/>
-                                <div
-                                    className="relative text-xl leading-[24px] font-semibold font-mobile-body-subtitle-2 text-red-red-400 hidden">
-                                    *
-                                </div>
-                            </div>
+                        {isViewOnly && (
                             <div className="w-[310px] flex flex-col items-start justify-start">
-                                <div
-                                    className="self-stretch flex flex-col items-start justify-start gap-[4px] text-center text-sm">
-                                    {isEnableHenLichKham
-                                        ? <div style={{width: '100%'}}>
-                                            <b>(Thời Lượng {thoiLuong} Phút)</b>
-                                            <p>Thời gian bắt đầu</p>
-                                            <div
-                                                className="self-stretch rounded-3xs bg-monochrome-white box-border h-[41px] flex flex-row py-0 px-4 items-center justify-start gap-[4px] border-[1px] border-solid border-grey-grey-40-t">
-                                                <input
-                                                    type={'datetime-local'}
-                                                    className={'input'}
-                                                    step={1800}
-                                                    value={ToDateTimeFormat(ngayGio)}
-                                                    onChange={onChangeStartDate}
-                                                />
-                                            </div>
-                                        </div>
-                                        : null}
-
-                                    {isEnableHenLichKham
-                                        ? <div style={{width: '50%', marginLeft: '25%'}}>
-                                            <p>Thời gian kết thúc</p>
-                                            <div
-                                                className="self-stretch rounded-3xs bg-monochrome-white box-border h-[41px] flex flex-row py-0 px-4 items-center justify-start gap-[4px] border-[1px] border-solid border-grey-grey-40-t">
-                                                <input
-                                                    type={'time'}
-                                                    className={'input'}
-                                                    step={defaultThoiLuong * 60}
-                                                    value={ToTimeFormat(ngayGioKetThuc)}
-                                                    onChange={onChangeEndDate}
-                                                />
-                                            </div>
-                                        </div>
-                                        : null}
+                                <div className="flex flex-row items-start justify-start gap-[2px]">
+                                    <div className="relative leading-[150%]">Thời gian khám</div>
                                     <div
-                                        className="self-stretch hidden flex-row py-0 px-3 items-end justify-start gap-[4px] text-left text-red-red-400">
+                                        className="relative text-xl leading-[24px] font-semibold font-mobile-body-subtitle-2 text-red-red-400">
+                                        *
+                                    </div>
+                                </div>
+                                <div
+                                    className="self-stretch rounded-lg bg-monochrome-white box-border h-10 flex flex-row py-2 pr-2 pl-4 items-center justify-start gap-[6px] text-sm text-grey-grey-300-s border-[1px] border-solid border-grey-grey-40-t">
+                                    <div className="flex-1 relative leading-[150%] flex items-center h-4">
+                                        {
+                                            StartAt !== undefined && Duration !== undefined
+                                                ? (
+                                                    <div className="flex flex-row items-center justify-start gap-[1px]">
+                                                        <div
+                                                            className="relative leading-[150%]">{StartAt.toLocaleTimeString('local', {
+                                                            hour: '2-digit',
+                                                            minute: '2-digit',
+                                                            hour12: false
+                                                        })}
+                                                        </div>
+                                                        <div className="relative leading-[150%]">({Duration} Phút) -</div>
+
+                                                        <div
+                                                            className="relative leading-[150%]"> {StartAt.getDate()}</div>
+                                                        <div className="relative leading-[150%]">/</div>
+                                                        <div
+                                                            className="relative leading-[150%]">{StartAt.getMonth() + 1}</div>
+                                                        <div className="relative leading-[150%]">/</div>
+                                                        <div
+                                                            className="relative leading-[150%]">{StartAt.getFullYear()}</div>
+                                                    </div>
+                                                )
+                                                : ''
+                                        }
+
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        )}
+
+                        {!isViewOnly && (
+                            <div className="w-[310px] flex flex-col items-start justify-start">
+                                <div className="flex flex-row items-start justify-start gap-[2px]">
+                                    <div className="relative leading-[150%]">Bác Sĩ</div>
+                                    <div
+                                        className="relative text-xl leading-[24px] font-semibold font-mobile-body-subtitle-2 text-red-red-400">
+                                        *
+                                    </div>
+                                </div>
+                                <div
+                                    className="self-stretch rounded-lg bg-monochrome-white box-border h-10 flex flex-row py-2 pr-2 pl-4 items-center justify-start gap-[6px] text-sm text-grey-grey-300-s border-[1px] border-solid border-grey-grey-40-t">
+                                    <div className="flex-1 relative leading-[150%] flex items-center h-4">
+                                        <select
+                                            className={'input select-input flex-1 relative leading-[150%] flex items-center h-7'}
+                                            value={doctorID}
+                                            onChange={(e) => {
+                                                setDoctorID(e.target.value)
+                                            }}
+                                        >
+                                            <option
+                                                className={'select-input-option'}
+                                                value={nullBacSiID} disabled>{nullBacSiID}
+                                            </option>
+                                            {listDoctor.data.bac_sy_loai_khamCollection.edges.map((bacSi) => <option
+                                                className={'select-input-option'}
+                                                value={bacSi.node.bac_sy.profiles.id}
+                                                key={bacSi.node.bac_sy.profiles.id}
+                                            >
+                                                {bacSi.node.bac_sy.profiles.first_name} {bacSi.node.bac_sy.profiles.last_name}
+                                            </option>)}
+                                        </select>
+
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {!isViewOnly && (
+                            <div className="w-[310px] flex flex-col items-start justify-start gap-[6px]">
+                                <div className="flex flex-row items-start justify-start gap-[2px]">
+                                    <div className="relative leading-[150%]">Hẹn ngày khám
+                                    </div>
+                                    <ToggleSwitch checked={isEnableHenLichKham} onChange={handleToggle}/>
+                                    <div
+                                        className="relative text-xl leading-[24px] font-semibold font-mobile-body-subtitle-2 text-red-red-400 hidden">
+                                        *
+                                    </div>
+                                </div>
+                                <div className="w-[310px] flex flex-col items-start justify-start">
+                                    <div
+                                        className="self-stretch flex flex-col items-start justify-start gap-[4px] text-center text-sm">
+                                        {isEnableHenLichKham
+                                            ? <div style={{width: '100%'}}>
+                                                <b>(Thời Lượng {thoiLuong} Phút)</b>
+                                                <p>Thời gian bắt đầu</p>
+                                                <div
+                                                    className="self-stretch rounded-3xs bg-monochrome-white box-border h-[41px] flex flex-row py-0 px-4 items-center justify-start gap-[4px] border-[1px] border-solid border-grey-grey-40-t">
+                                                    <input
+                                                        type={'datetime-local'}
+                                                        className={'input'}
+                                                        step={1800}
+                                                        value={ToDateTimeFormat(ngayGio)}
+                                                        onChange={onChangeStartDate}
+                                                    />
+                                                </div>
+                                            </div>
+                                            : null}
+
+                                        {isEnableHenLichKham
+                                            ? <div style={{width: '50%', marginLeft: '25%'}}>
+                                                <p>Thời gian kết thúc</p>
+                                                <div
+                                                    className="self-stretch rounded-3xs bg-monochrome-white box-border h-[41px] flex flex-row py-0 px-4 items-center justify-start gap-[4px] border-[1px] border-solid border-grey-grey-40-t">
+                                                    <input
+                                                        type={'time'}
+                                                        className={'input'}
+                                                        step={defaultThoiLuong * 60}
+                                                        value={ToTimeFormat(ngayGioKetThuc)}
+                                                        onChange={onChangeEndDate}
+                                                    />
+                                                </div>
+                                            </div>
+                                            : null}
+                                        <div
+                                            className="self-stretch hidden flex-row py-0 px-3 items-end justify-start gap-[4px] text-left text-red-red-400">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
                     <div className="w-[636px] flex flex-col items-start justify-start">
                         <div className="flex flex-row items-start justify-start gap-[2px]">
@@ -548,15 +612,23 @@ const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = (
                                     src="/left-icon.svg"
                                 />
                                 <div className="flex-1 relative leading-[150%]">
-                                    <input
-                                        type="text"
-                                        placeholder={'Hãy mô tả về tình trạng của bạn'}
-                                        className={'input flex-1 relative  w-[100%]'}
-                                        value={note}
-                                        onChange={(e) => {
-                                            setNote(e.target.value)
-                                        }}
-                                    />
+                                    {isViewOnly
+                                        ? (
+                                            <div className="flex flex-row items-center justify-start gap-[1px]">
+                                                <div className="relative leading-[150%]">{noteE}</div>
+                                            </div>
+                                        )
+                                        : (
+                                            <input
+                                                type="text"
+                                                placeholder={'Hãy mô tả về tình trạng của bạn'}
+                                                className={'input flex-1 relative  w-[100%]'}
+                                                value={note}
+                                                onChange={(e) => {
+                                                    setNote(e.target.value)
+                                                }}
+                                            />
+                                        )}
                                 </div>
                                 <img
                                     className="relative w-[22px] h-[22px] hidden"
@@ -599,15 +671,31 @@ const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = (
                     </div>
                 </div>
             </div>
-            <div
-                className="rounded-xl bg-blue-blue-300 w-[636px] h-12 flex flex-row py-2 px-4 box-border items-center justify-center gap-[8px] text-monochrome-white cursor-button"
-                onClick={onSaveClick}>
-                <img className="relative w-7 h-7 hidden" alt="" src={leftIcon}/>
-                <div className="relative leading-[150%] uppercase font-medium cursor-button">
-                    Đăng ký khám bệnh
-                </div>
-                <img className="relative w-7 h-7 hidden" alt="" src={rightIcon1}/>
-            </div>
+            {isViewOnly
+                ? (
+                    <div
+                        className="rounded-xl bg-blue-blue-300 w-[636px] h-12 flex flex-row py-2 px-4 box-border items-center justify-center gap-[8px] text-monochrome-white cursor-button"
+                        onClick={() => {
+                            console.log('hello')
+                        }}>
+                        <img className="relative w-7 h-7 hidden" alt="" src={'/lefticon8.svg'}/>
+                        <div className="relative leading-[150%] uppercase font-medium cursor-button">
+                            Khám bệnh
+                        </div>
+                        <img className="relative w-7 h-7 hidden" alt="" src={'/lefticon8.svg'}/>
+                    </div>
+                )
+                : (
+                    <div
+                        className="rounded-xl bg-blue-blue-300 w-[636px] h-12 flex flex-row py-2 px-4 box-border items-center justify-center gap-[8px] text-monochrome-white cursor-button"
+                        onClick={onSaveClick}>
+                        <img className="relative w-7 h-7 hidden" alt="" src={'/lefticon8.svg'}/>
+                        <div className="relative leading-[150%] uppercase font-medium cursor-button">
+                            Đăng ký khám bệnh
+                        </div>
+                        <img className="relative w-7 h-7 hidden" alt="" src={'/lefticon8.svg'}/>
+                    </div>
+                )}
         </div>
     </div>
 }

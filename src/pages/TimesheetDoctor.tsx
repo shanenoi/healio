@@ -1,13 +1,39 @@
-import {type FunctionComponent, useEffect, useState} from 'react'
+import {type FunctionComponent, useEffect, useRef, useState} from 'react'
 import KhamBenhContainer from '../components/KhamBenhContainer'
 import {GraphQLClient} from '../utils/supabaseClient'
 import {QueryListMedicalExamination} from '../api/graphql_query'
 import {type ListMedicalExaminationResponse} from '../api/response'
+import MedicalRegisterContainer from '../components/MedicalRegisterContainer'
 
 const TimesheetDoctor: FunctionComponent = () => {
-    const [medicalExaminations, setMedicalExaminations] = useState<ListMedicalExaminationResponse | null>(null)
+    const blurBackgroundRef = useRef(null)
+    const [showMedicalRegisterContainer, setShowMedicalRegisterContainer] = useState(false)
 
-    const onActionClick = (id: number) => {
+    const setVisibilityMedicalRegister = (show: boolean) => {
+        if (blurBackgroundRef.current === null) {
+            return
+        }
+
+        if (show) {
+            (blurBackgroundRef.current as HTMLElement).style.visibility = 'visible'
+            setShowMedicalRegisterContainer(show)
+        } else {
+            (blurBackgroundRef.current as HTMLElement).style.visibility = 'hidden'
+            setShowMedicalRegisterContainer(show)
+        }
+    }
+    const showMedicalRegister = () => {
+        setVisibilityMedicalRegister(true)
+    }
+
+    const hideMedicalRegister = () => {
+        setVisibilityMedicalRegister(false)
+    }
+
+    const [medicalExaminations, setMedicalExaminations] = useState<ListMedicalExaminationResponse | null>(null)
+    const [selectedID, setSelectedID] = useState('')
+
+    const onActionClick = (id: string) => {
         console.log(id)
     }
 
@@ -116,13 +142,18 @@ const TimesheetDoctor: FunctionComponent = () => {
                                 medicalExaminations?.data.kham_benhCollection.edges.map((item) =>
                                     <KhamBenhContainer
                                         key={item.node.id}
+                                        ID={item.node.id}
                                         OrderNumber={item.node.so_thu_tu}
                                         profile={item.node.benh_nhan.profiles}
                                         TypeAccess={item.node.loai_kham === null ? '' : item.node.loai_kham.ten}
                                         StartAt={new Date(item.node.ngay_gio)}
                                         Duration={item.node.duration}
                                         propColor="#202124"
-                                        ActionsCallback={onActionClick}
+                                        ActionsCallback={() => {
+                                            onActionClick(item.node.id)
+                                            setSelectedID(item.node.id)
+                                            showMedicalRegister()
+                                        }}
                                     />
                                 )
                             }
@@ -256,6 +287,32 @@ const TimesheetDoctor: FunctionComponent = () => {
                     </div>
                 </div>
             </div>
+
+            <div
+                id={'blur-background'}
+                ref={blurBackgroundRef}
+                style={{visibility: 'hidden'}}
+                className="absolute top-[calc(50%_-_512px)] left-[0px] bg-blur-background w-[100%] h-[1024px]"
+                onClick={hideMedicalRegister}
+            />
+            {showMedicalRegisterContainer &&
+                medicalExaminations?.data.kham_benhCollection.edges.map((item) => {
+                        if (item.node.id === selectedID) {
+                            return (
+                                <MedicalRegisterContainer
+                                    key={item.node.id}
+                                    formID={undefined}
+                                    StartAt={new Date(item.node.ngay_gio)}
+                                    Duration={item.node.duration}
+                                    loaiKhamE={item.node.loai_kham?.ten}
+                                    onCloseClickV2={hideMedicalRegister}
+                                />
+                            )
+                        }
+                        return null
+                    }
+                )
+            }
         </div>
     )
 }

@@ -23,6 +23,7 @@ const MedicalRegister: FunctionComponent = () => {
     const showMedicalRegister = () => {
         setVisibilityMedicalRegister(true)
     }
+
     const hideMedicalRegister = () => {
         setVisibilityMedicalRegister(false)
     }
@@ -48,13 +49,8 @@ const MedicalRegister: FunctionComponent = () => {
             />
             {showMedicalRegisterContainer && (
                 <MedicalRegisterContainer
-                    maskGroup="/mask-group4.svg"
-                    rightIcon="/righticon4.svg"
-                    xRegular="/x-regular3.svg"
-                    leftIcon="/lefticon8.svg"
-                    rightIcon1="/lefticon8.svg"
-                    onCloseClickV2={hideMedicalRegister}
                     formID={uuidv4()}
+                    onCloseClickV2={hideMedicalRegister}
                 />
             )}
         </div>
