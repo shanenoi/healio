@@ -5,7 +5,8 @@ import {type Profiles} from '../utils/supabaseTypes'
 
 interface TaiMuiHongContainerType {
     OrderNumber: number
-    CreatedAt: Date
+    StartAt: Date
+    Duration: number
     TypeAccess: string
     profile: Profiles
     ActionsCallback: (OrderNumber: number) => void
@@ -16,7 +17,8 @@ interface TaiMuiHongContainerType {
 
 const KhamBenhContainer: FunctionComponent<TaiMuiHongContainerType> = ({
                                                                            OrderNumber,
-                                                                           CreatedAt,
+                                                                           StartAt,
+                                                                           Duration,
                                                                            TypeAccess,
                                                                            ActionsCallback,
                                                                            profile,
@@ -63,11 +65,19 @@ const KhamBenhContainer: FunctionComponent<TaiMuiHongContainerType> = ({
             </div>
             <div className="w-[200px] flex flex-col items-start justify-center text-center">
                 <div className="flex flex-row items-center justify-start gap-[1px]">
-                    <div className="relative leading-[150%]">{CreatedAt.getDate()}</div>
+                    <div className="relative leading-[150%]">{StartAt.getDate()}</div>
                     <div className="relative leading-[150%]">/</div>
-                    <div className="relative leading-[150%]">{CreatedAt.getMonth() + 1}</div>
+                    <div className="relative leading-[150%]">{StartAt.getMonth() + 1}</div>
                     <div className="relative leading-[150%]">/</div>
-                    <div className="relative leading-[150%]">{CreatedAt.getFullYear()}</div>
+                    <div className="relative leading-[150%]">{StartAt.getFullYear()}</div>
+                </div>
+                <div className="flex flex-row items-center justify-start gap-[1px]">
+                    <div className="relative leading-[150%]">{StartAt.toLocaleTimeString('local', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: false
+                    })}</div>
+                    <div className="relative leading-[150%]">({Duration} Phút)</div>
                 </div>
             </div>
             <div className="flex-1 flex flex-col items-start justify-center text-blue-blue-400">

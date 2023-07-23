@@ -54,7 +54,8 @@ export const QueryListMedicalExamination = () => {
                   node {
                     id
                     so_thu_tu
-                    created_at
+                    ngay_gio
+                    duration
                     loai_kham {
                       ten
                     }

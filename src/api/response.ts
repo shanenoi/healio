@@ -44,10 +44,11 @@ export interface ListMedicalExaminationResponse {
                     id: string
                     so_thu_tu: number
                     loai_kham: LoaiKham
+                    ngay_gio: string
+                    duration: number
                     benh_nhan: {
                         profiles: Profiles
                     }
-                    created_at: string
                 }
             }>
         }

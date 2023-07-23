@@ -98,7 +98,7 @@ const TimesheetDoctor: FunctionComponent = () => {
                                 </div>
                                 <div className="self-stretch w-[200px] flex flex-row items-center justify-start">
                                     <div className="relative leading-[150%] font-medium">
-                                        Ngày tạo
+                                        Giờ khám
                                     </div>
                                 </div>
                                 <div className="self-stretch flex-1 flex flex-row items-center justify-start">
@@ -119,7 +119,8 @@ const TimesheetDoctor: FunctionComponent = () => {
                                         OrderNumber={item.node.so_thu_tu}
                                         profile={item.node.benh_nhan.profiles}
                                         TypeAccess={item.node.loai_kham === null ? '' : item.node.loai_kham.ten}
-                                        CreatedAt={new Date(item.node.created_at)}
+                                        StartAt={new Date(item.node.ngay_gio)}
+                                        Duration={item.node.duration}
                                         propColor="#202124"
                                         ActionsCallback={onActionClick}
                                     />
