@@ -1,34 +1,17 @@
-import {type FunctionComponent, useEffect, useRef, useState} from 'react'
 import KhamBenhContainer from '../components/KhamBenhContainer'
+import MedicalRegisterContainer from '../components/MedicalRegisterContainer'
+import {CtrlPopupVisibility} from '../utils/utils'
 import {GraphQLClient} from '../utils/supabaseClient'
 import {QueryListMedicalExamination} from '../api/graphql_query'
+import {type FunctionComponent, useEffect, useState} from 'react'
 import {type ListMedicalExaminationResponse} from '../api/response'
-import MedicalRegisterContainer from '../components/MedicalRegisterContainer'
 
 const TimesheetDoctor: FunctionComponent = () => {
-    const blurBackgroundRef = useRef(null)
-    const [showMedicalRegisterContainer, setShowMedicalRegisterContainer] = useState(false)
-
-    const setVisibilityMedicalRegister = (show: boolean) => {
-        if (blurBackgroundRef.current === null) {
-            return
-        }
-
-        if (show) {
-            (blurBackgroundRef.current as HTMLElement).style.visibility = 'visible'
-            setShowMedicalRegisterContainer(show)
-        } else {
-            (blurBackgroundRef.current as HTMLElement).style.visibility = 'hidden'
-            setShowMedicalRegisterContainer(show)
-        }
-    }
-    const showMedicalRegister = () => {
-        setVisibilityMedicalRegister(true)
-    }
-
-    const hideMedicalRegister = () => {
-        setVisibilityMedicalRegister(false)
-    }
+    const popupVisibility = CtrlPopupVisibility()
+    const blurBackgroundRef = popupVisibility.blurBackgroundRef
+    const showMedicalRegisterContainer = popupVisibility.showPp
+    const showMedicalRegister = popupVisibility.showP
+    const hideMedicalRegister = popupVisibility.hideP
 
     const [medicalExaminations, setMedicalExaminations] = useState<ListMedicalExaminationResponse | null>(null)
     const [selectedID, setSelectedID] = useState('')

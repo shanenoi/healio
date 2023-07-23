@@ -1,7 +1,37 @@
+import {useRef, useState} from 'react'
+
 export const ToTimeFormat = (time: Date) => {
     return new Date(time.getTime() - time.getTimezoneOffset() * 60000).toISOString().slice(11, 16)
 }
 
 export const ToDateTimeFormat = (time: Date) => {
     return new Date(time.getTime() - time.getTimezoneOffset() * 60000).toISOString().slice(0, 16)
+}
+
+export const CtrlPopupVisibility = () => {
+    const blurBackgroundRef = useRef(null)
+    const [showPp, setShowPp] = useState(false)
+
+    const setVisibilityP = (show: boolean) => {
+        if (blurBackgroundRef.current === null) {
+            return
+        }
+
+        if (show) {
+            (blurBackgroundRef.current as HTMLElement).style.visibility = 'visible'
+            setShowPp(show)
+        } else {
+            (blurBackgroundRef.current as HTMLElement).style.visibility = 'hidden'
+            setShowPp(show)
+        }
+    }
+
+    const showP = () => {
+        setVisibilityP(true)
+    }
+
+    const hideP = () => {
+        setVisibilityP(false)
+    }
+    return {blurBackgroundRef, showPp, showP, hideP}
 }

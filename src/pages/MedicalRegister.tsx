@@ -1,32 +1,15 @@
 import MedicalRegisterContainer from '../components/MedicalRegisterContainer'
 import PatientVisitContainer from '../components/PatientVisitContainer'
-import {type FunctionComponent, useRef, useState} from 'react'
+import {CtrlPopupVisibility} from '../utils/utils'
+import {type FunctionComponent} from 'react'
 import {v4 as uuidv4} from 'uuid'
 
 const MedicalRegister: FunctionComponent = () => {
-    const blurBackgroundRef = useRef(null)
-    const [showMedicalRegisterContainer, setShowMedicalRegisterContainer] = useState(false)
-
-    const setVisibilityMedicalRegister = (show: boolean) => {
-        if (blurBackgroundRef.current === null) {
-            return
-        }
-
-        if (show) {
-            (blurBackgroundRef.current as HTMLElement).style.visibility = 'visible'
-            setShowMedicalRegisterContainer(show)
-        } else {
-            (blurBackgroundRef.current as HTMLElement).style.visibility = 'hidden'
-            setShowMedicalRegisterContainer(show)
-        }
-    }
-    const showMedicalRegister = () => {
-        setVisibilityMedicalRegister(true)
-    }
-
-    const hideMedicalRegister = () => {
-        setVisibilityMedicalRegister(false)
-    }
+    const popupVisibility = CtrlPopupVisibility()
+    const blurBackgroundRef = popupVisibility.blurBackgroundRef
+    const showMedicalRegisterContainer = popupVisibility.showPp
+    const showMedicalRegister = popupVisibility.showP
+    const hideMedicalRegister = popupVisibility.hideP
 
     return (
         <div className="relative bg-monochrome-white w-full h-[1024px]">
