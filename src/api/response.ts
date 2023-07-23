@@ -1,4 +1,6 @@
-interface ExaminationTypeResponse {
+import {type LoaiKham, type Profiles} from '../utils/supabaseTypes'
+
+export interface ExaminationTypeResponse {
     data: {
         bac_sy_loai_khamCollection: {
             edges: Array<{
@@ -13,7 +15,7 @@ interface ExaminationTypeResponse {
     }
 }
 
-interface ListDoctorByExaminationTypeResponse {
+export interface ListDoctorByExaminationTypeResponse {
     data: {
         bac_sy_loai_khamCollection: {
             edges: Array<{
@@ -34,7 +36,20 @@ interface ListDoctorByExaminationTypeResponse {
     }
 }
 
-export type {
-    ListDoctorByExaminationTypeResponse,
-    ExaminationTypeResponse
+export interface ListMedicalExaminationResponse {
+    data: {
+        kham_benhCollection: {
+            edges: Array<{
+                node: {
+                    id: string
+                    so_thu_tu: number
+                    loai_kham: LoaiKham
+                    benh_nhan: {
+                        profiles: Profiles
+                    }
+                    created_at: string
+                }
+            }>
+        }
+    }
 }
