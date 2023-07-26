@@ -1,38 +1,33 @@
-import KhamBenhContainer from '../components/KhamBenhContainer'
-import MedicalRegisterPopup from '../components/MedicalRegisterPopup'
+import PatientDetailsPopup from '../components/PatientDetailsPopup'
+import PatientViewContainer from '../components/PatientViewContainer'
 import {CtrlPopupVisibility} from '../utils/utils'
-import {GraphQLClient} from '../utils/supabaseClient'
-import {QueryListMedicalExamination} from '../api/graphql_query'
+import {supabaseClient} from '../utils/supabaseClient'
+import {type BenhAn, BenhAnTable} from '../utils/supabaseTypes'
 import {type FunctionComponent, useEffect, useState} from 'react'
-import {type ListMedicalExaminationResponse} from '../api/response'
+import {useParams} from 'react-router-dom'
 
-const TimesheetDoctor: FunctionComponent = () => {
+const PatientDetailsView: FunctionComponent = () => {
+    const {id} = useParams<{ id: string }>()
+
     const popupVisibility = CtrlPopupVisibility()
     const blurBackgroundRef = popupVisibility.blurBackgroundRef
     const showMedicalRegisterContainer = popupVisibility.showPp
     const showMedicalRegister = popupVisibility.showP
     const hideMedicalRegister = popupVisibility.hideP
 
-    const [medicalExaminations, setMedicalExaminations] = useState<ListMedicalExaminationResponse | null>(null)
     const [selectedID, setSelectedID] = useState('')
+    const [benhAns, setBenhAns] = useState<BenhAn[]>([])
 
-    const onActionClick = (id: string) => {
-        setSelectedID(id)
-        showMedicalRegister()
-    }
-
-    // get list medical examination
     useEffect(() => {
-        new GraphQLClient()
-            .Send(QueryListMedicalExamination())
-            .then((response) => {
-                const resp = response as ListMedicalExaminationResponse
-                setMedicalExaminations(resp)
-                console.log('resp')
-                console.log(resp)
-            }).catch((error) => {
-            console.log(error)
-        })
+        void supabaseClient
+            .from(BenhAnTable)
+            .select('*')
+            .eq('benh_nhan_id', id)
+            .then(resp => {
+                setBenhAns(resp.data as BenhAn[])
+                console.log('benhAns')
+                console.log(benhAns)
+            })
     }, [])
 
     return (
@@ -70,20 +65,19 @@ const TimesheetDoctor: FunctionComponent = () => {
                                     />
                                 </div>
                                 <div
-                                    className="rounded-lg bg-monochrome-white box-border h-8 hidden flex-row py-2 px-4 items-center justify-center gap-[8px] text-sm text-blue-blue-400 border-[1px] border-solid border-blue-blue-400">
+                                    className="cursor-button flex rounded-lg bg-monochrome-white box-border h-8 py-2 px-4 items-center justify-center gap-[8px] text-sm text-blue-blue-400 border-[1px] border-solid border-blue-blue-400"
+                                    onClick={() => {
+                                        showMedicalRegister()
+                                    }}
+                                >
                                     <img
                                         className="relative w-4 h-4"
                                         alt=""
                                         src="/lefticon1.svg"
                                     />
                                     <div className="relative leading-[150%] uppercase font-medium">
-                                        thêm
+                                        Thêm bệnh án
                                     </div>
-                                    <img
-                                        className="relative w-6 h-6 hidden"
-                                        alt=""
-                                        src="/righticon.svg"
-                                    />
                                 </div>
                             </div>
                         </div>
@@ -98,22 +92,12 @@ const TimesheetDoctor: FunctionComponent = () => {
                                 <div
                                     className="flex-1 rounded-tl-lg rounded-tr-none rounded-br-none rounded-bl-lg h-[19px] flex flex-row items-center justify-start text-left">
                                     <div className="relative leading-[150%] font-medium">
-                                        Họ tên
-                                    </div>
-                                </div>
-                                <div className="self-stretch w-[308px] flex flex-row items-center justify-start">
-                                    <div className="relative leading-[150%] font-medium inline-block w-[46px] shrink-0">
-                                        Liên hệ
+                                        Chẩn đoán
                                     </div>
                                 </div>
                                 <div className="self-stretch w-[200px] flex flex-row items-center justify-start">
                                     <div className="relative leading-[150%] font-medium">
-                                        Giờ khám
-                                    </div>
-                                </div>
-                                <div className="self-stretch flex-1 flex flex-row items-center justify-start">
-                                    <div className="relative leading-[150%] font-medium">
-                                        Loại khám
+                                        Ngày lập
                                     </div>
                                 </div>
                                 <div className="self-stretch w-[100px] flex flex-row items-center justify-start">
@@ -123,21 +107,25 @@ const TimesheetDoctor: FunctionComponent = () => {
                                 </div>
                             </div>
                             {
-                                medicalExaminations?.data.kham_benhCollection.edges.map((item) =>
-                                    <KhamBenhContainer
-                                        key={item.node.id}
-                                        ID={item.node.id}
-                                        OrderNumber={item.node.so_thu_tu}
-                                        profile={item.node.benh_nhan.profiles}
-                                        TypeAccess={item.node.loai_kham === null ? '' : item.node.loai_kham.ten}
-                                        StartAt={new Date(item.node.ngay_gio)}
-                                        Duration={item.node.duration}
-                                        propColor="#202124"
-                                        ActionsCallback={() => {
-                                            onActionClick(item.node.id)
-                                        }}
-                                    />
-                                )
+                                benhAns.map((item, idx) => {
+                                    if (item === null) {
+                                        return null
+                                    }
+                                    return (
+                                        <PatientViewContainer
+                                            ID={item.id}
+                                            key={item.id}
+                                            OrderNumber={idx + 1}
+                                            BenhAn={item}
+                                            propColor="#202124"
+                                            ActionsCallback={() => {
+                                                setSelectedID(item.id)
+                                                showMedicalRegister()
+                                                console.log(selectedID)
+                                            }}
+                                        />
+                                    )
+                                })
                             }
                         </div>
                         <div
@@ -203,7 +191,7 @@ const TimesheetDoctor: FunctionComponent = () => {
                             className="absolute top-[90px] left-[0px] w-[200px] flex flex-col items-center justify-start gap-[18px]">
                             <div className="self-stretch flex flex-col items-start justify-center">
                                 <div
-                                    className="bg-blue-blue-400 box-border w-[200px] h-[50px] flex flex-col p-4 items-start justify-center text-monochrome-white border-l-[4px] border-solid border-monochrome-white">
+                                    className="w-[200px] h-[50px] flex flex-col py-6 px-4 box-border items-start justify-center">
                                     <div className="flex flex-row items-center justify-start gap-[16px]">
                                         <img
                                             className="relative w-6 h-6"
@@ -214,7 +202,7 @@ const TimesheetDoctor: FunctionComponent = () => {
                                     </div>
                                 </div>
                                 <div
-                                    className="w-[200px] h-[50px] flex flex-col py-6 px-4 box-border items-start justify-center">
+                                    className="bg-blue-blue-400 box-border w-[200px] h-[50px] flex flex-col p-4 items-start justify-center text-monochrome-white border-l-[4px] border-solid border-monochrome-white">
                                     <div className="w-[108px] flex flex-row items-center justify-start gap-[16px]">
                                         <img
                                             className="relative w-[24.25px] h-6"
@@ -277,26 +265,9 @@ const TimesheetDoctor: FunctionComponent = () => {
                 className="absolute top-[calc(50%_-_512px)] left-[0px] bg-blur-background w-[100%] h-[1024px]"
                 onClick={hideMedicalRegister}
             />
-            {showMedicalRegisterContainer &&
-                medicalExaminations?.data.kham_benhCollection.edges.map((item) => {
-                        if (item.node.id === selectedID) {
-                            return (
-                                <MedicalRegisterPopup
-                                    key={item.node.id}
-                                    formID={undefined}
-                                    StartAt={new Date(item.node.ngay_gio)}
-                                    Duration={item.node.duration}
-                                    loaiKhamE={item.node.loai_kham?.ten}
-                                    onCloseClick={hideMedicalRegister}
-                                />
-                            )
-                        }
-                        return null
-                    }
-                )
-            }
+            {showMedicalRegisterContainer && (<PatientDetailsPopup onCloseClick={hideMedicalRegister}/>)}
         </div>
     )
 }
 
-export default TimesheetDoctor
+export default PatientDetailsView

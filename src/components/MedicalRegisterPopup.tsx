@@ -6,6 +6,7 @@ import {ToDateTimeFormat, ToTimeFormat} from '../utils/utils'
 import {getAuthUser, GraphQLClient, supabaseClient} from '../utils/supabaseClient'
 import {type ExaminationTypeResponse, type ListDoctorByExaminationTypeResponse} from '../api/response'
 import {type KhamBenh, KhamBenhTable, type Profiles, ProfilesTable} from '../utils/supabaseTypes'
+import {useNavigate} from 'react-router-dom'
 
 // TODO: add validate for each input
 
@@ -18,7 +19,7 @@ interface EmployeeInfoContainerType {
     Duration?: number
     loaiKhamE?: string
     noteE?: string
-    onCloseClickV2: () => void
+    onCloseClick: () => void
 }
 
 const reloadEvents = async () => {
@@ -32,14 +33,16 @@ const reloadEvents = async () => {
     return await axios.request(config)
 }
 
-const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = ({
-                                                                                    formID,
-                                                                                    StartAt,
-                                                                                    Duration,
-                                                                                    loaiKhamE,
-                                                                                    noteE,
-                                                                                    onCloseClickV2
-                                                                                }) => {
+const MedicalRegisterPopup: FunctionComponent<EmployeeInfoContainerType> = ({
+                                                                                formID,
+                                                                                StartAt,
+                                                                                Duration,
+                                                                                loaiKhamE,
+                                                                                noteE,
+                                                                                onCloseClick
+                                                                            }) => {
+    const navigate = useNavigate()
+
     const nullExaminationTypeID = 'Chọn loại'
     const nullBacSiID = 'Chọn Bác Sĩ'
 
@@ -178,7 +181,7 @@ const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = (
         console.log(`khamBenh.note ${khamBenh.note ?? ''}`)
         console.log('===========================')
 
-        onCloseClickV2()
+        onCloseClick()
     }
 
     const onChangeStartDate = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -208,6 +211,10 @@ const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = (
         setThoiLuong(Math.floor((_ngayGioKetThuc.getTime() - ngayGio.getTime()) / 1000 / 60))
     }
 
+    const directPatientDetailsView = (id: string) => {
+        navigate(`/patient_details_view/${id}`)
+    }
+
     return <div
         className="absolute top-[calc(50%_-_328px)] left-[calc(50%_-_350px)] rounded-2xl bg-monochrome-white flex flex-row py-0 px-8 items-start justify-start text-center text-sm text-neutral-grey-700 font-button-button-2">
         <div
@@ -231,7 +238,7 @@ const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = (
                     )}
                 </div>
                 <img className="relative w-6 h-6 cursor-button" alt="" src={'/x-regular3.svg'}
-                     onClick={onCloseClickV2}/>
+                     onClick={onCloseClick}/>
             </div>
             <div className="self-stretch flex flex-col items-start justify-start gap-[16px] text-left text-base">
                 <div className="relative font-medium">Thông tin bệnh nhân</div>
@@ -676,7 +683,10 @@ const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = (
                     <div
                         className="rounded-xl bg-blue-blue-300 w-[636px] h-12 flex flex-row py-2 px-4 box-border items-center justify-center gap-[8px] text-monochrome-white cursor-button"
                         onClick={() => {
-                            console.log('hello')
+                            if (patient?.id === undefined) {
+                                return
+                            }
+                            directPatientDetailsView(patient?.id)
                         }}>
                         <img className="relative w-7 h-7 hidden" alt="" src={'/lefticon8.svg'}/>
                         <div className="relative leading-[150%] uppercase font-medium cursor-button">
@@ -700,4 +710,4 @@ const MedicalRegisterContainer: FunctionComponent<EmployeeInfoContainerType> = (
     </div>
 }
 
-export default MedicalRegisterContainer
+export default MedicalRegisterPopup

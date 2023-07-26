@@ -1,4 +1,4 @@
-import MedicalRegisterContainer from '../components/MedicalRegisterContainer'
+import MedicalRegisterPopup from '../components/MedicalRegisterPopup'
 import PatientVisitContainer from '../components/PatientVisitContainer'
 import {CtrlPopupVisibility} from '../utils/utils'
 import {type FunctionComponent} from 'react'
@@ -31,9 +31,9 @@ const MedicalRegister: FunctionComponent = () => {
                 onClick={hideMedicalRegister}
             />
             {showMedicalRegisterContainer && (
-                <MedicalRegisterContainer
+                <MedicalRegisterPopup
                     formID={uuidv4()}
-                    onCloseClickV2={hideMedicalRegister}
+                    onCloseClick={hideMedicalRegister}
                 />
             )}
         </div>

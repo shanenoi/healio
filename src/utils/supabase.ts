@@ -87,7 +87,7 @@ export interface Database {
                     chan_doan: string | null
                     created_at: string | null
                     id: string
-                    ngay_lap: string | null
+                    updated_at: string | null
                 }
                 Insert: {
                     bac_sy_id?: string | null
@@ -95,7 +95,7 @@ export interface Database {
                     chan_doan?: string | null
                     created_at?: string | null
                     id?: string
-                    ngay_lap?: string | null
+                    updated_at?: string | null
                 }
                 Update: {
                     bac_sy_id?: string | null
@@ -103,7 +103,7 @@ export interface Database {
                     chan_doan?: string | null
                     created_at?: string | null
                     id?: string
-                    ngay_lap?: string | null
+                    updated_at?: string | null
                 }
                 Relationships: [
                     {
@@ -269,7 +269,7 @@ export interface Database {
                     cancel_at?: string | null
                     created_at?: string | null
                     deleted_at?: string | null
-                    duration?: number
+                    duration: number
                     id?: string
                     is_scheduled?: boolean
                     loai_kham_id: string

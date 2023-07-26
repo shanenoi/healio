@@ -1,5 +1,6 @@
 import LogIn from './pages/LogIn'
 import MedicalRegister from './pages/MedicalRegister'
+import PatientDetailsView from './pages/PatientDetailsView'
 import TimesheetDoctor from './pages/TimesheetDoctor'
 import {Route, Routes, useLocation, useNavigationType} from 'react-router-dom'
 import {useEffect} from 'react'
@@ -52,13 +53,12 @@ function App() {
         }
     }, [pathname])
 
-    // login -> login
-    // medical-register -> medical-register7
     return (
         <Routes>
             <Route path="/log-in" element={<LogIn/>}/>
             <Route path="/medical-register" element={<MedicalRegister/>}/>
             <Route path="/timesheet-doctor" element={<TimesheetDoctor/>}/>
+            <Route path="/patient_details_view/:id" element={<PatientDetailsView/>}/>
         </Routes>
     )
 }
