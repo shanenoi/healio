@@ -5,9 +5,11 @@ import {supabaseClient} from '../utils/supabaseClient'
 import {type BenhAn, BenhAnTable} from '../utils/supabaseTypes'
 import {type FunctionComponent, useEffect, useState} from 'react'
 import {useParams} from 'react-router-dom'
+import {v4 as uuidv4} from 'uuid'
 
 const PatientDetailsView: FunctionComponent = () => {
-    const {id} = useParams<{ id: string }>()
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const {patientID, khamBenhID} = useParams<{ patientID: string, khamBenhID: string }>()
 
     const popupVisibility = CtrlPopupVisibility()
     const blurBackgroundRef = popupVisibility.blurBackgroundRef
@@ -15,14 +17,14 @@ const PatientDetailsView: FunctionComponent = () => {
     const showMedicalRegister = popupVisibility.showP
     const hideMedicalRegister = popupVisibility.hideP
 
-    const [selectedID, setSelectedID] = useState('')
+    const [selectedID, setSelectedID] = useState<string | undefined>('')
     const [benhAns, setBenhAns] = useState<BenhAn[]>([])
 
     useEffect(() => {
         void supabaseClient
             .from(BenhAnTable)
             .select('*')
-            .eq('benh_nhan_id', id)
+            .eq('benh_nhan_id', patientID)
             .then(resp => {
                 setBenhAns(resp.data as BenhAn[])
                 console.log('benhAns')
@@ -265,7 +267,15 @@ const PatientDetailsView: FunctionComponent = () => {
                 className="absolute top-[calc(50%_-_512px)] left-[0px] bg-blur-background w-[100%] h-[1024px]"
                 onClick={hideMedicalRegister}
             />
-            {showMedicalRegisterContainer && (<PatientDetailsPopup onCloseClick={hideMedicalRegister}/>)}
+            {showMedicalRegisterContainer && (
+                <PatientDetailsPopup
+                    formID={uuidv4()}
+                    existedID={selectedID}
+                    patientID={patientID ?? ''}
+                    khamBenhID={khamBenhID ?? ''}
+                    onCloseClick={hideMedicalRegister}
+                />
+            )}
         </div>
     )
 }

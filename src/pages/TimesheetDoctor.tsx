@@ -280,9 +280,15 @@ const TimesheetDoctor: FunctionComponent = () => {
             {showMedicalRegisterContainer &&
                 medicalExaminations?.data.kham_benhCollection.edges.map((item) => {
                         if (item.node.id === selectedID) {
+                            console.log('item')
+                            console.log(item)
+                            const benhNhanID = item.node.benh_nhan?.profiles?.id
+                            console.log(benhNhanID)
                             return (
                                 <MedicalRegisterPopup
                                     key={item.node.id}
+                                    selectedUserID={benhNhanID}
+                                    khamBenhID={item.node.id}
                                     formID={undefined}
                                     StartAt={new Date(item.node.ngay_gio)}
                                     Duration={item.node.duration}

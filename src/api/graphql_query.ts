@@ -61,6 +61,7 @@ export const QueryListMedicalExamination = () => {
                     }
                     benh_nhan {
                       profiles {
+                        id
                         first_name
                         last_name
                         phone

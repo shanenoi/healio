@@ -15,6 +15,8 @@ const defaultThoiLuong = 30
 
 interface EmployeeInfoContainerType {
     formID?: string
+    selectedUserID?: string
+    khamBenhID?: string
     StartAt?: Date
     Duration?: number
     loaiKhamE?: string
@@ -35,6 +37,8 @@ const reloadEvents = async () => {
 
 const MedicalRegisterPopup: FunctionComponent<EmployeeInfoContainerType> = ({
                                                                                 formID,
+                                                                                selectedUserID,
+                                                                                khamBenhID,
                                                                                 StartAt,
                                                                                 Duration,
                                                                                 loaiKhamE,
@@ -75,10 +79,15 @@ const MedicalRegisterPopup: FunctionComponent<EmployeeInfoContainerType> = ({
                     return
                 }
 
+                let _id = user.id
+                if (selectedUserID !== undefined) {
+                    _id = selectedUserID
+                }
+
                 const data = await supabaseClient
                     .from(ProfilesTable)
                     .select('*')
-                    .eq('id', user.id)
+                    .eq('id', _id)
                     .single()
                 setPatient(data.data as Profiles)
             })
@@ -211,8 +220,8 @@ const MedicalRegisterPopup: FunctionComponent<EmployeeInfoContainerType> = ({
         setThoiLuong(Math.floor((_ngayGioKetThuc.getTime() - ngayGio.getTime()) / 1000 / 60))
     }
 
-    const directPatientDetailsView = (id: string) => {
-        navigate(`/patient_details_view/${id}`)
+    const directPatientDetailsView = (patientID: string, khamBenhID: string) => {
+        navigate(`/patient_details_view/${patientID}/${khamBenhID}`)
     }
 
     return <div
@@ -686,7 +695,10 @@ const MedicalRegisterPopup: FunctionComponent<EmployeeInfoContainerType> = ({
                             if (patient?.id === undefined) {
                                 return
                             }
-                            directPatientDetailsView(patient?.id)
+                            if (khamBenhID === undefined) {
+                                return
+                            }
+                            directPatientDetailsView(patient?.id, khamBenhID)
                         }}>
                         <img className="relative w-7 h-7 hidden" alt="" src={'/lefticon8.svg'}/>
                         <div className="relative leading-[150%] uppercase font-medium cursor-button">

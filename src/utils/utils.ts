@@ -8,6 +8,14 @@ export const ToDateTimeFormat = (time: Date) => {
     return new Date(time.getTime() - time.getTimezoneOffset() * 60000).toISOString().slice(0, 16)
 }
 
+export const ToDateFormat = (date: Date) => {
+    const isoString = date.toISOString()
+    const year = isoString.slice(0, 4)
+    const month = isoString.slice(5, 7)
+    const day = isoString.slice(8, 10)
+    return (year + '-' + month + '-' + day)
+}
+
 export const CtrlPopupVisibility = () => {
     const blurBackgroundRef = useRef(null)
     const [showPp, setShowPp] = useState(false)

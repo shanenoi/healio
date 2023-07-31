@@ -87,6 +87,8 @@ export interface Database {
                     chan_doan: string | null
                     created_at: string | null
                     id: string
+                    loi_dan: string | null
+                    trieu_chung: string | null
                     updated_at: string | null
                 }
                 Insert: {
@@ -95,6 +97,8 @@ export interface Database {
                     chan_doan?: string | null
                     created_at?: string | null
                     id?: string
+                    loi_dan?: string | null
+                    trieu_chung?: string | null
                     updated_at?: string | null
                 }
                 Update: {
@@ -103,6 +107,8 @@ export interface Database {
                     chan_doan?: string | null
                     created_at?: string | null
                     id?: string
+                    loi_dan?: string | null
+                    trieu_chung?: string | null
                     updated_at?: string | null
                 }
                 Relationships: [
@@ -125,6 +131,7 @@ export interface Database {
                     benh_an_id: string
                     created_at: string | null
                     deleted_at: string | null
+                    ghi_chu: string | null
                     kham_benh_id: string
                     so_luong: number
                     thuoc_id: string
@@ -134,6 +141,7 @@ export interface Database {
                     benh_an_id: string
                     created_at?: string | null
                     deleted_at?: string | null
+                    ghi_chu?: string | null
                     kham_benh_id: string
                     so_luong: number
                     thuoc_id: string
@@ -143,6 +151,7 @@ export interface Database {
                     benh_an_id?: string
                     created_at?: string | null
                     deleted_at?: string | null
+                    ghi_chu?: string | null
                     kham_benh_id?: string
                     so_luong?: number
                     thuoc_id?: string
