@@ -5,10 +5,6 @@ export type Thuoc = Database['public']['Tables']['thuoc']['Row'] | null
 export const ThuocTable = 'thuoc'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export type TaiKham = Database['public']['Tables']['tai_kham']['Row'] | null
-export const TaiKhamTable = 'tai_kham'
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export type Profiles = Database['public']['Tables']['profiles']['Row'] | null
 export const ProfilesTable = 'profiles'
 

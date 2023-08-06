@@ -87,7 +87,9 @@ export interface Database {
                     chan_doan: string | null
                     created_at: string | null
                     id: string
+                    kham_benh_id: string | null
                     loi_dan: string | null
+                    tai_kham: string | null
                     trieu_chung: string | null
                     updated_at: string | null
                 }
@@ -97,7 +99,9 @@ export interface Database {
                     chan_doan?: string | null
                     created_at?: string | null
                     id?: string
+                    kham_benh_id?: string | null
                     loi_dan?: string | null
+                    tai_kham?: string | null
                     trieu_chung?: string | null
                     updated_at?: string | null
                 }
@@ -107,7 +111,9 @@ export interface Database {
                     chan_doan?: string | null
                     created_at?: string | null
                     id?: string
+                    kham_benh_id?: string | null
                     loi_dan?: string | null
+                    tai_kham?: string | null
                     trieu_chung?: string | null
                     updated_at?: string | null
                 }
@@ -122,6 +128,12 @@ export interface Database {
                         foreignKeyName: 'benh_an_benh_nhan_id_fkey'
                         columns: ['benh_nhan_id']
                         referencedRelation: 'benh_nhan'
+                        referencedColumns: ['id']
+                    },
+                    {
+                        foreignKeyName: 'benh_an_kham_benh_id_fkey'
+                        columns: ['kham_benh_id']
+                        referencedRelation: 'kham_benh'
                         referencedColumns: ['id']
                     }
                 ]
@@ -409,40 +421,6 @@ export interface Database {
                     version?: number
                 }
                 Relationships: []
-            }
-            tai_kham: {
-                Row: {
-                    benh_an_id: string
-                    created_at: string | null
-                    deleted_at: string | null
-                    id: string
-                    ngay: string
-                    updated_at: string | null
-                }
-                Insert: {
-                    benh_an_id: string
-                    created_at?: string | null
-                    deleted_at?: string | null
-                    id?: string
-                    ngay: string
-                    updated_at?: string | null
-                }
-                Update: {
-                    benh_an_id?: string
-                    created_at?: string | null
-                    deleted_at?: string | null
-                    id?: string
-                    ngay?: string
-                    updated_at?: string | null
-                }
-                Relationships: [
-                    {
-                        foreignKeyName: 'tai_kham_benh_an_id_fkey'
-                        columns: ['benh_an_id']
-                        referencedRelation: 'benh_an'
-                        referencedColumns: ['id']
-                    }
-                ]
             }
             thuoc: {
                 Row: {

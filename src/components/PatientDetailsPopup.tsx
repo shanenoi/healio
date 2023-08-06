@@ -38,7 +38,6 @@ const PatientDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
     const [thuocs, setThuocs] = useState<Thuoc[]>([])
     const [oldBenhAnThuocs, setOldBenhAnThuocs] = useState<BenhAnThuoc[]>([])
     const [benhAnThuocs, setBenhAnThuocs] = useState<BenhAnThuoc[]>([])
-    const [thoiGianTaiKham, setThoiGianTaiKham] = useState<Date | null>(null)
 
     useEffect(() => {
         if (existedBenhAn === undefined) {
@@ -108,7 +107,9 @@ const PatientDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
             bac_sy_id: currentUser?.id ?? null,
             benh_nhan_id: patientID,
             chan_doan: benhAn?.chan_doan ?? '',
+            kham_benh_id: khamBenhID,
             loi_dan: benhAn?.loi_dan ?? '',
+            tai_kham: benhAn?.tai_kham ?? null,
             trieu_chung: benhAn?.trieu_chung ?? '',
 
             created_at: benhAn?.created_at ?? now.toISOString(),
@@ -296,12 +297,15 @@ const PatientDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
                                             value={benhAn?.chan_doan ?? ''}
                                             onChange={e => {
                                                 setBenhAn({
+                                                    id: benhAn?.id ?? '',
+
                                                     bac_sy_id: benhAn?.bac_sy_id ?? '',
                                                     benh_nhan_id: benhAn?.benh_nhan_id ?? '',
-                                                    id: benhAn?.id ?? '',
-                                                    loi_dan: benhAn?.loi_dan ?? '',
-                                                    trieu_chung: benhAn?.trieu_chung ?? '',
                                                     chan_doan: e.target.value,
+                                                    kham_benh_id: benhAn?.kham_benh_id ?? '',
+                                                    loi_dan: benhAn?.loi_dan ?? '',
+                                                    tai_kham: benhAn?.tai_kham ?? null,
+                                                    trieu_chung: benhAn?.trieu_chung ?? '',
 
                                                     created_at: benhAn?.created_at ?? now.toISOString(),
                                                     updated_at: benhAn?.updated_at ?? now.toISOString()
@@ -390,12 +394,15 @@ const PatientDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
                             className="self-stretch rounded-3xs bg-monochrome-white box-border h-[41px] flex flex-row py-0 px-4 items-center justify-start gap-[4px] border-[1px] border-solid border-grey-grey-40-t"
                             onChange={(e) => {
                                 setBenhAn({
+                                    id: benhAn?.id ?? '',
+
                                     bac_sy_id: benhAn?.bac_sy_id ?? '',
                                     benh_nhan_id: benhAn?.benh_nhan_id ?? '',
-                                    id: benhAn?.id ?? '',
-                                    loi_dan: benhAn?.loi_dan ?? '',
-                                    trieu_chung: e.target.value,
                                     chan_doan: benhAn?.chan_doan ?? '',
+                                    kham_benh_id: benhAn?.kham_benh_id ?? '',
+                                    loi_dan: benhAn?.loi_dan ?? '',
+                                    tai_kham: benhAn?.tai_kham ?? null,
+                                    trieu_chung: e.target.value,
 
                                     created_at: benhAn?.created_at ?? now.toISOString(),
                                     updated_at: benhAn?.updated_at ?? now.toISOString()
@@ -511,9 +518,37 @@ const PatientDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
                                             type="date"
                                             className={'input no-arrows'}
                                             placeholder={'--'}
-                                            value={thoiGianTaiKham !== null ? ToDateFormat(thoiGianTaiKham) : ''}
+                                            value={(() => {
+                                                if (benhAn == null) {
+                                                    return ''
+                                                }
+                                                if (benhAn.tai_kham == null) {
+                                                    return ''
+                                                }
+
+                                                return ToDateFormat(new Date(benhAn.tai_kham))
+                                            })()}
                                             onChange={(e) => {
-                                                setThoiGianTaiKham(new Date(e.target.value))
+                                                let taiKham: Date | null = null
+
+                                                if (e.target.value !== '') {
+                                                    taiKham = new Date(e.target.value)
+                                                }
+
+                                                setBenhAn({
+                                                    id: benhAn?.id ?? '',
+
+                                                    bac_sy_id: benhAn?.bac_sy_id ?? '',
+                                                    benh_nhan_id: benhAn?.benh_nhan_id ?? '',
+                                                    chan_doan: benhAn?.chan_doan ?? '',
+                                                    kham_benh_id: benhAn?.kham_benh_id ?? '',
+                                                    loi_dan: benhAn?.loi_dan ?? '',
+                                                    tai_kham: taiKham !== null ? taiKham.toISOString() : null,
+                                                    trieu_chung: benhAn?.trieu_chung ?? '',
+
+                                                    created_at: benhAn?.created_at ?? now.toISOString(),
+                                                    updated_at: benhAn?.updated_at ?? now.toISOString()
+                                                })
                                             }}
                                         />
                                     </div>
@@ -553,12 +588,15 @@ const PatientDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
                             className="self-stretch rounded-3xs bg-monochrome-white box-border h-[41px] flex flex-row py-0 px-4 items-center justify-start gap-[4px] border-[1px] border-solid border-grey-grey-40-t"
                             onChange={(e) => {
                                 setBenhAn({
+                                    id: benhAn?.id ?? '',
+
                                     bac_sy_id: benhAn?.bac_sy_id ?? '',
                                     benh_nhan_id: benhAn?.benh_nhan_id ?? '',
-                                    id: benhAn?.id ?? '',
-                                    loi_dan: e.target.value,
-                                    trieu_chung: benhAn?.trieu_chung ?? '',
                                     chan_doan: benhAn?.chan_doan ?? '',
+                                    kham_benh_id: benhAn?.kham_benh_id ?? '',
+                                    loi_dan: e.target.value,
+                                    tai_kham: benhAn?.tai_kham ?? null,
+                                    trieu_chung: benhAn?.trieu_chung ?? '',
 
                                     created_at: benhAn?.created_at ?? now.toISOString(),
                                     updated_at: benhAn?.updated_at ?? now.toISOString()
