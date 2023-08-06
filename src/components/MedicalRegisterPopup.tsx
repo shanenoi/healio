@@ -8,10 +8,14 @@ import {type ExaminationTypeResponse, type ListDoctorByExaminationTypeResponse} 
 import {type KhamBenh, KhamBenhTable, type Profiles, ProfilesTable} from '../utils/supabaseTypes'
 import {useNavigate} from 'react-router-dom'
 
-// TODO: add validate for each input
-
-// TODO: move it to config files .ts
 const defaultThoiLuong = 30
+
+const timeTableContent = `
+from start to end
+from start to end
+from start to end
+from start to end
+`
 
 interface EmployeeInfoContainerType {
     formID?: string
@@ -225,7 +229,7 @@ const MedicalRegisterPopup: FunctionComponent<EmployeeInfoContainerType> = ({
     }
 
     return <div
-        className="absolute top-[calc(50%_-_328px)] left-[calc(50%_-_350px)] rounded-2xl bg-monochrome-white flex flex-row py-0 px-8 items-start justify-start text-center text-sm text-neutral-grey-700 font-button-button-2">
+        className="absolute top-[calc(50%_-_400px)] left-[calc(50%_-_350px)] rounded-2xl bg-monochrome-white flex flex-row py-0 px-8 items-start justify-start text-center text-sm text-neutral-grey-700 font-button-button-2">
         <div
             className="self-stretch w-[636px] flex flex-col py-8 px-0 box-border items-center justify-start gap-[32px]">
             <div className="self-stretch flex flex-row items-start justify-between text-blue-blue-400">
@@ -237,9 +241,13 @@ const MedicalRegisterPopup: FunctionComponent<EmployeeInfoContainerType> = ({
                     />
                     {!isViewOnly && (
                         <div
-                            className="rounded-lg bg-monochrome-white box-border h-8 flex flex-row py-2 px-4 items-center justify-center gap-[8px] border-[1px] border-solid border-blue-blue-400">
+                            className="rounded-lg bg-monochrome-white box-border h-8 flex flex-row py-2 px-4 items-center justify-center gap-[8px] border-[1px] border-solid border-blue-blue-400"
+                            style={{display: 'none'}}
+                        >
                             <img className="relative w-4 h-4" alt="" src="/lefticon1.svg"/>
-                            <div className="relative leading-[150%] uppercase font-medium">
+                            <div className="relative leading-[150%] uppercase font-medium"
+                                 style={{display: 'none'}}
+                            >
                                 chọn ảnh
                             </div>
                             <img className="relative w-6 h-6 hidden" alt="" src={'/righticon4.svg'}/>
@@ -555,7 +563,8 @@ const MedicalRegisterPopup: FunctionComponent<EmployeeInfoContainerType> = ({
                                 </div>
                             </div>
                         )}
-
+                    </div>
+                    <div className="self-stretch flex flex-row items-start justify-start gap-[16px]">
                         {!isViewOnly && (
                             <div className="w-[310px] flex flex-col items-start justify-start gap-[6px]">
                                 <div className="flex flex-row items-start justify-start gap-[2px]">
@@ -607,6 +616,29 @@ const MedicalRegisterPopup: FunctionComponent<EmployeeInfoContainerType> = ({
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        )}
+
+                        {isEnableHenLichKham && (
+                            <div className="w-[310px] flex flex-col items-start justify-start">
+                                <div className="flex flex-row items-start justify-start gap-[2px]">
+                                    <div className="relative leading-[150%]">Thời gian trống</div>
+                                </div>
+                                <textarea
+                                    style={{
+                                        height: '200px',
+                                        maxHeight: '200px',
+                                        maxWidth: '100%',
+                                        minHeight: '200px',
+                                        minWidth: '100%',
+                                        outline: 'none',
+                                        paddingTop: '20px'
+                                    }}
+                                    placeholder={''}
+                                    value={timeTableContent}
+                                    className="self-stretch rounded-3xs bg-monochrome-white box-border h-[41px] flex flex-row py-0 px-4 items-center justify-start gap-[4px] border-[1px] border-solid border-grey-grey-40-t"
+                                    disabled
+                                />
                             </div>
                         )}
                     </div>

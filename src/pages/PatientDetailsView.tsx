@@ -41,7 +41,9 @@ const PatientDetailsView: FunctionComponent = () => {
 
     return (
         <div className="relative w-full h-[1024px] text-center text-sm text-grey-grey-60 font-body-body-2">
-            <div className="absolute top-[0px] left-[0px] bg-background-background w-[100%] h-[1024px] overflow-hidden">
+            <div className="absolute top-[0px] left-[0px] bg-background-background w-[100%] h-[1024px] overflow-hidden"
+                 style={{paddingBottom: '100px'}}
+            >
                 <div className="absolute top-[0px] left-[14%] h-[1024px] flex flex-col items-start justify-start">
                     <div className="h-[1024px] flex flex-col p-8 box-border items-center justify-start gap-[32px]">
                         <div className="w-[1498px] flex flex-row items-center justify-between text-left">
@@ -155,8 +157,11 @@ const PatientDetailsView: FunctionComponent = () => {
                             }
                         </div>
                         <div
-                            className="self-stretch flex flex-row items-center justify-end gap-[24px] text-grey-grey-900-p">
-                            <div className="flex flex-row items-center justify-center gap-[16px]">
+                            className="self-stretch flex flex-row items-center justify-end gap-[24px] text-grey-grey-900-p"
+                        >
+                            <div className="flex flex-row items-center justify-center gap-[16px]"
+                                 style={{display: 'none'}}
+                            >
                                 <img
                                     className="relative w-3.5 h-3.5"
                                     alt=""
@@ -191,7 +196,9 @@ const PatientDetailsView: FunctionComponent = () => {
                                 />
                             </div>
                             <div
-                                className="rounded-lg box-border h-8 flex flex-row py-0 px-4 items-center justify-center gap-[16px] text-left text-xs border-[1px] border-solid border-grey-grey-300-s">
+                                className="rounded-lg box-border h-8 flex flex-row py-0 px-4 items-center justify-center gap-[16px] text-left text-xs border-[1px] border-solid border-grey-grey-300-s"
+                                style={{display: 'none'}}
+                            >
                                 <div className="relative">10</div>
                                 <img
                                     className="relative w-4 h-4"
@@ -203,7 +210,9 @@ const PatientDetailsView: FunctionComponent = () => {
                     </div>
                 </div>
                 <div
-                    className="absolute top-[0px] left-[0px] bg-neutral-grey-800 w-[200px] h-[1024px] text-left text-grey-grey-300-s">
+                    className="absolute top-[0px] left-[0px] bg-neutral-grey-800 w-[200px] h-[1024px] text-left text-grey-grey-300-s"
+                    style={{position: 'fixed'}}
+                >
                     <div className="absolute top-[0px] left-[0px] w-[200px] h-[376px]">
                         <div
                             className="absolute top-[0px] left-[47.27px] w-[98.42px] h-[90px] flex flex-row items-center justify-center">
@@ -287,7 +296,10 @@ const PatientDetailsView: FunctionComponent = () => {
             <div
                 id={'blur-background'}
                 ref={medicalRegisterBlurBackgroundRef}
-                style={{visibility: 'hidden'}}
+                style={{
+                    visibility: 'hidden',
+                    position: 'fixed'
+                }}
                 className="absolute top-[calc(50%_-_512px)] left-[0px] bg-blur-background w-[100%] h-[1024px]"
                 onClick={medicalRegisterHideMedicalRegister}
             />
@@ -313,7 +325,10 @@ const PatientDetailsView: FunctionComponent = () => {
             <div
                 id={'blur-background'}
                 ref={orderDetailsBlurBackgroundRef}
-                style={{visibility: 'hidden'}}
+                style={{
+                    visibility: 'hidden',
+                    position: 'fixed'
+                }}
                 className="absolute top-[calc(50%_-_512px)] left-[0px] bg-blur-background w-[100%] h-[1024px]"
                 onClick={orderDetailsHideMedicalRegister}
             />

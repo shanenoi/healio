@@ -608,7 +608,27 @@ const PatientDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
             </div>
 
             <div
+                className="self-stretch flex flex-row items-start justify-start gap-[38px] text-center text-sm text-blue-blue-400"
+                style={{alignSelf: 'center'}}
+            >
+                <div
+                    className="rounded-lg bg-monochrome-white box-border w-[249px] h-10 flex flex-row py-0 px-6 items-center justify-center gap-[8px] border-[1px] border-solid border-blue-blue-400 cursor-button"
+                >
+                    <img className="relative w-6 h-6" alt="" src="/noun-printer-5896976.svg"/>
+                    <div className="relative uppercase font-medium">In</div>
+                </div>
+                <div
+                    className="rounded-lg bg-monochrome-white box-border w-[249px] h-10 flex flex-row py-0 px-6 items-center justify-center gap-[8px] border-[1px] border-solid border-blue-blue-400 cursor-button"
+                    onClick={saveBenhAnAction}
+                >
+                    <img className="relative w-6 h-6" alt="" src="/pencilsimple-regular.svg"/>
+                    <div className="relative uppercase font-medium">cập nhật</div>
+                </div>
+            </div>
+
+            <div
                 className="rounded-xl bg-blue-blue-300 w-[636px] h-12 flex flex-row py-2 px-4 box-border items-center justify-center gap-[8px] text-monochrome-white cursor-button"
+                style={{display: 'none'}}
                 onClick={saveBenhAnAction}
             >
                 <img className="relative w-7 h-7 hidden" alt="" src={'/lefticon8.svg'}/>

@@ -26,7 +26,10 @@ const MedicalRegister: FunctionComponent = () => {
             <div
                 id={'blur-background'}
                 ref={blurBackgroundRef}
-                style={{visibility: 'hidden'}}
+                style={{
+                    visibility: 'hidden',
+                    position: 'fixed'
+                }}
                 className="absolute top-[calc(50%_-_512px)] left-[0px] bg-blur-background w-[100%] h-[1024px]"
                 onClick={hideMedicalRegister}
             />
