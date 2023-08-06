@@ -26,6 +26,10 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
     const [stateData, setStateData] = useState(data)
 
     useEffect(() => {
+        setStateData(data)
+    }, [data])
+
+    useEffect(() => {
     }, [stateData])
 
     const handleInputChange = (

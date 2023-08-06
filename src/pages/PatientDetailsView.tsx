@@ -198,7 +198,7 @@ const PatientDetailsView: FunctionComponent = () => {
                                         <img
                                             className="relative w-6 h-6"
                                             alt=""
-                                            src="/calendarblank-regular.svg"
+                                            src="/CalendarBlank_Regular.svg"
                                         />
                                         <div className="relative leading-[150%]">Lịch làm việc</div>
                                     </div>
@@ -271,6 +271,12 @@ const PatientDetailsView: FunctionComponent = () => {
                 <PatientDetailsPopup
                     formID={uuidv4()}
                     existedID={selectedID}
+                    existedBenhAn={(() => {
+                        if (selectedID !== undefined) {
+                            return benhAns?.find((item) => item?.id === selectedID)
+                        }
+                        return undefined
+                    })()}
                     patientID={patientID ?? ''}
                     khamBenhID={khamBenhID ?? ''}
                     onCloseClick={hideMedicalRegister}

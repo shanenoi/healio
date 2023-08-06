@@ -4,39 +4,69 @@ import {ToDateFormat} from '../utils/utils'
 import {getAuthUser, supabaseClient} from '../utils/supabaseClient'
 import {
     type BenhAn,
+    BenhAnTable,
     type BenhAnThuoc,
+    BenhAnThuocTable,
     type Profiles,
     ProfilesTable,
     type Thuoc,
     ThuocTable
 } from '../utils/supabaseTypes'
 
-// TODO: add validate for each input
-
 interface EmployeeInfoContainerType {
     formID: string
     existedID?: string
+    existedBenhAn?: BenhAn
     patientID: string
     khamBenhID: string
     onCloseClick: () => void
 }
 
+const now = new Date()
+
 const PatientDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
                                                                                formID,
                                                                                existedID,
+                                                                               existedBenhAn,
                                                                                patientID,
                                                                                khamBenhID,
                                                                                onCloseClick
                                                                            }) => {
     const [currentUser, setCurrentUser] = useState<Profiles>(null)
 
-    const [, setBenhAn] = useState<BenhAn>(null)
-    const [chanDoan, setChanDoan] = useState('')
-    const [trieuChung, setTrieuChung] = useState('')
-    const [loiDang, setLoiDang] = useState('')
+    const [benhAn, setBenhAn] = useState<BenhAn>(null)
     const [thuocs, setThuocs] = useState<Thuoc[]>([])
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [benhAnThuoc, setBenhAnThuoc] = useState<BenhAnThuoc[]>([])
+    const [oldBenhAnThuocs, setOldBenhAnThuocs] = useState<BenhAnThuoc[]>([])
+    const [benhAnThuocs, setBenhAnThuocs] = useState<BenhAnThuoc[]>([])
+    const [thoiGianTaiKham, setThoiGianTaiKham] = useState<Date | null>(null)
+
+    useEffect(() => {
+        if (existedBenhAn === undefined) {
+            return
+        }
+
+        void supabaseClient
+            .from(BenhAnTable)
+            .select('*')
+            .eq('id', existedBenhAn?.id)
+            .single()
+            .then(resp => {
+                setBenhAn(resp.data as BenhAn)
+
+                void supabaseClient
+                    .from(BenhAnThuocTable)
+                    .select('*')
+                    .eq('benh_an_id', existedBenhAn?.id)
+                    .is('deleted_at', null)
+                    .then(resp => {
+                        const _benhAnThuoc = resp.data as BenhAnThuoc[]
+                        setBenhAnThuocs(_benhAnThuoc)
+                        setOldBenhAnThuocs(_benhAnThuoc)
+                        console.log('_benhAnThuoc')
+                        console.log(_benhAnThuoc)
+                    })
+            })
+    }, [])
 
     useEffect(() => {
         getAuthUser().then(async user => {
@@ -72,38 +102,98 @@ const PatientDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
     }
 
     function saveBenhAnAction() {
-        const now = new Date()
-        const data: BenhAn = {
+        const newBenhAn: BenhAn = {
             id: getBenhAnID(),
 
             bac_sy_id: currentUser?.id ?? null,
             benh_nhan_id: patientID,
-            chan_doan: chanDoan,
-            loi_dan: loiDang,
-            trieu_chung: trieuChung,
+            chan_doan: benhAn?.chan_doan ?? '',
+            loi_dan: benhAn?.loi_dan ?? '',
+            trieu_chung: benhAn?.trieu_chung ?? '',
 
-            created_at: now.toISOString(),
+            created_at: benhAn?.created_at ?? now.toISOString(),
             updated_at: now.toISOString()
         }
-        setBenhAn(data)
-
         console.log('BenhAn')
-        console.log(data)
+        console.log(newBenhAn)
 
-        console.log('benhAnThuoc')
-        console.log(benhAnThuoc)
+        console.log('benhAnThuocs')
+        console.log(benhAnThuocs)
+
+        void supabaseClient
+            .from(BenhAnTable)
+            .upsert(newBenhAn)
+            .then(resp => {
+                console.log('resp-upsert.BenhAn')
+                console.log(resp.error)
+                if (resp.error !== null) {
+                    return
+                }
+
+                benhAnThuocs.forEach(benhAnThuoc => {
+                    if (benhAnThuoc === null) {
+                        return
+                    }
+
+                    const newBenhAnThuoc: BenhAnThuoc = {
+                        benh_an_id: benhAnThuoc.benh_an_id,
+                        ghi_chu: benhAnThuoc.ghi_chu,
+                        kham_benh_id: benhAnThuoc.kham_benh_id,
+                        so_luong: benhAnThuoc.so_luong,
+                        thuoc_id: benhAnThuoc.thuoc_id,
+
+                        created_at: now.toISOString(),
+                        updated_at: now.toISOString(),
+                        deleted_at: null
+                    }
+                    void supabaseClient
+                        .from(BenhAnThuocTable)
+                        .upsert(newBenhAnThuoc).then(resp => {
+                            console.log('resp-upsert.BenhAnThuoc')
+                            console.log(resp)
+                        })
+                })
+
+                oldBenhAnThuocs.forEach(benhAnThuoc => {
+                    if (benhAnThuoc === null) {
+                        return
+                    }
+
+                    console.log('=====================')
+                    console.log(benhAnThuocs
+                        .map(benhAnThuoc => benhAnThuoc?.thuoc_id ?? ''))
+                    console.log(benhAnThuoc?.thuoc_id ?? '.')
+                    console.log(benhAnThuocs
+                        .map(benhAnThuoc => benhAnThuoc?.thuoc_id ?? '')
+                        .includes(benhAnThuoc?.thuoc_id ?? '.'))
+                    if (benhAnThuocs
+                        .map(benhAnThuoc => benhAnThuoc?.thuoc_id ?? '')
+                        .includes(benhAnThuoc?.thuoc_id ?? '.')) {
+                        return
+                    }
+
+                    const newBenhAnThuoc: BenhAnThuoc = {
+                        benh_an_id: benhAnThuoc.benh_an_id,
+                        ghi_chu: benhAnThuoc.ghi_chu,
+                        kham_benh_id: benhAnThuoc.kham_benh_id,
+                        so_luong: benhAnThuoc.so_luong,
+                        thuoc_id: benhAnThuoc.thuoc_id,
+
+                        created_at: benhAnThuoc.created_at,
+                        updated_at: benhAnThuoc.updated_at,
+                        deleted_at: now.toISOString()
+                    }
+                    void supabaseClient
+                        .from(BenhAnThuocTable)
+                        .upsert(newBenhAnThuoc).then(resp => {
+                            console.log('resp-upsert.BenhAnThuoc')
+                            console.log(resp)
+                        })
+                })
+            })
     }
 
     function onchangeListThuoc(data: Array<Record<string, any>>, i: number) {
-        if (i === -1) {
-            return
-        }
-        const thuoc = thuocs.filter(t => t?.id === data[i]['Tên thuốc'])[0]
-        if (thuoc === null || thuoc === undefined) {
-            return
-        }
-
-        const now = new Date()
         const selectedData: BenhAnThuoc[] = data.map(d => {
             return {
                 benh_an_id: getBenhAnID(),
@@ -119,7 +209,7 @@ const PatientDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
         })
         console.log('selectedData')
         console.log(selectedData)
-        setBenhAnThuoc(selectedData)
+        setBenhAnThuocs(selectedData)
     }
 
     return <div
@@ -158,7 +248,6 @@ const PatientDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
                                         <input
                                             type="text"
                                             className={'input'}
-                                            // placeholder={'Văn A'}
                                             value={(() => {
                                                 if (currentUser === null) {
                                                     return ''
@@ -207,9 +296,19 @@ const PatientDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
                                             type="text"
                                             className={'input'}
                                             placeholder={'Chẩn đoán'}
-                                            value={chanDoan}
+                                            value={benhAn?.chan_doan ?? ''}
                                             onChange={e => {
-                                                setChanDoan(e.target.value)
+                                                setBenhAn({
+                                                    bac_sy_id: benhAn?.bac_sy_id ?? '',
+                                                    benh_nhan_id: benhAn?.benh_nhan_id ?? '',
+                                                    id: benhAn?.id ?? '',
+                                                    loi_dan: benhAn?.loi_dan ?? '',
+                                                    trieu_chung: benhAn?.trieu_chung ?? '',
+                                                    chan_doan: e.target.value,
+
+                                                    created_at: benhAn?.created_at ?? now.toISOString(),
+                                                    updated_at: benhAn?.updated_at ?? now.toISOString()
+                                                })
                                             }}
                                         />
                                     </div>
@@ -235,10 +334,6 @@ const PatientDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
                         <div className="w-[310px] flex flex-col items-start justify-start">
                             <div className="flex flex-row items-start justify-start gap-[2px]">
                                 <div className="relative leading-[150%]">Ngày lập</div>
-                                <div
-                                    className="relative text-xl leading-[24px] font-semibold font-mobile-body-subtitle-2 text-red-red-400">
-                                    *
-                                </div>
                             </div>
                             <div
                                 className="self-stretch flex flex-col items-start justify-start gap-[4px] text-sm text-grey-grey-300-s">
@@ -254,7 +349,7 @@ const PatientDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
                                             type="date"
                                             className={'input no-arrows'}
                                             placeholder={'--'}
-                                            value={ToDateFormat(new Date())}
+                                            value={ToDateFormat(new Date(benhAn?.created_at ?? now.toISOString()))}
                                             disabled={true}
                                         />
                                     </div>
@@ -294,10 +389,20 @@ const PatientDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
                                 paddingTop: '20px'
                             }}
                             placeholder={'Mô tả về tình trạng của bệnh nhân'}
-                            value={trieuChung}
+                            value={benhAn?.trieu_chung ?? ''}
                             className="self-stretch rounded-3xs bg-monochrome-white box-border h-[41px] flex flex-row py-0 px-4 items-center justify-start gap-[4px] border-[1px] border-solid border-grey-grey-40-t"
                             onChange={(e) => {
-                                setTrieuChung(e.target.value)
+                                setBenhAn({
+                                    bac_sy_id: benhAn?.bac_sy_id ?? '',
+                                    benh_nhan_id: benhAn?.benh_nhan_id ?? '',
+                                    id: benhAn?.id ?? '',
+                                    loi_dan: benhAn?.loi_dan ?? '',
+                                    trieu_chung: e.target.value,
+                                    chan_doan: benhAn?.chan_doan ?? '',
+
+                                    created_at: benhAn?.created_at ?? now.toISOString(),
+                                    updated_at: benhAn?.updated_at ?? now.toISOString()
+                                })
                             }}
                         />
                     </div>
@@ -329,12 +434,12 @@ const PatientDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
                                                 }
                                                 return {text: `${thuoc.ten} (${thuoc.don_vi})`, value: thuoc.id}
                                             }),
-                                            size: '40%'
+                                            size: '60%'
                                         },
                                         {
                                             name: 'Số lượng',
                                             inputMethod: 'number',
-                                            size: '10%'
+                                            size: '12%'
                                         },
                                         {
                                             name: 'Ghi chú',
@@ -342,7 +447,22 @@ const PatientDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
                                             size: '100%'
                                         }
                                     ]}
-                                    data={[]}
+                                    data={benhAnThuocs.map(benhAnThuoc => {
+                                        if (benhAnThuoc === null) {
+                                            return {
+                                                _id: `${new Date().getTime()}.${Math.random().toString(36).substring(2, 9)}`,
+                                                'Tên thuốc': '',
+                                                'Số lượng': '',
+                                                'Ghi chú': ''
+                                            }
+                                        }
+                                        return {
+                                            _id: `${new Date().getTime()}.${Math.random().toString(36).substring(2, 9)}`,
+                                            'Tên thuốc': benhAnThuoc.thuoc_id,
+                                            'Số lượng': benhAnThuoc.so_luong,
+                                            'Ghi chú': benhAnThuoc.ghi_chu
+                                        }
+                                    })}
                                     onChange={(data, i) => {
                                         onchangeListThuoc(data, i)
                                     }}
@@ -375,13 +495,52 @@ const PatientDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
                             />
                         </div>
                     </div>
+                    <div className="self-stretch flex flex-row items-start justify-start gap-[16px]">
+                        <div className="w-[310px] flex flex-col items-start justify-start">
+                            <div className="flex flex-row items-start justify-start gap-[2px]">
+                                <div className="relative leading-[150%]">Tái khám</div>
+                            </div>
+                            <div
+                                className="self-stretch flex flex-col items-start justify-start gap-[4px] text-sm text-grey-grey-300-s">
+                                <div
+                                    className="self-stretch rounded-3xs bg-monochrome-white box-border h-[41px] flex flex-row py-0 px-4 items-center justify-start gap-[4px] border-[1px] border-solid border-grey-grey-40-t">
+                                    <img
+                                        className="relative w-[22px] h-[22px] hidden"
+                                        alt=""
+                                        src="/left-icon.svg"
+                                    />
+                                    <div className="flex-1 relative leading-[150%]">
+                                        <input
+                                            type="date"
+                                            className={'input no-arrows'}
+                                            placeholder={'--'}
+                                            value={thoiGianTaiKham !== null ? ToDateFormat(thoiGianTaiKham) : ''}
+                                            onChange={(e) => {
+                                                setThoiGianTaiKham(new Date(e.target.value))
+                                            }}
+                                        />
+                                    </div>
+                                    <img
+                                        className="relative w-[22px] h-[22px] hidden"
+                                        alt=""
+                                        src="/left-icon.svg"
+                                    />
+                                </div>
+                                <div
+                                    className="self-stretch hidden flex-row py-0 px-3 items-end justify-start gap-[4px] text-red-red-400">
+                                    <img
+                                        className="relative w-5 h-5"
+                                        alt=""
+                                        src="/notice-icon.svg"
+                                    />
+                                    <div className="flex-1 relative leading-[150%]">Allert</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div className="w-[636px] flex flex-col items-start justify-start">
                         <div className="flex flex-row items-start justify-start gap-[2px]">
                             <div className="relative leading-[150%]">Lời dặn</div>
-                            <div
-                                className="relative text-xl leading-[24px] font-semibold font-mobile-body-subtitle-2 text-red-red-400 hidden">
-                                *
-                            </div>
                         </div>
                         <textarea
                             style={{
@@ -393,10 +552,20 @@ const PatientDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
                                 paddingTop: '20px'
                             }}
                             placeholder={'Lời dặn'}
-                            value={loiDang}
+                            value={benhAn?.loi_dan ?? ''}
                             className="self-stretch rounded-3xs bg-monochrome-white box-border h-[41px] flex flex-row py-0 px-4 items-center justify-start gap-[4px] border-[1px] border-solid border-grey-grey-40-t"
                             onChange={(e) => {
-                                setLoiDang(e.target.value)
+                                setBenhAn({
+                                    bac_sy_id: benhAn?.bac_sy_id ?? '',
+                                    benh_nhan_id: benhAn?.benh_nhan_id ?? '',
+                                    id: benhAn?.id ?? '',
+                                    loi_dan: e.target.value,
+                                    trieu_chung: benhAn?.trieu_chung ?? '',
+                                    chan_doan: benhAn?.chan_doan ?? '',
+
+                                    created_at: benhAn?.created_at ?? now.toISOString(),
+                                    updated_at: benhAn?.updated_at ?? now.toISOString()
+                                })
                             }}
                         />
                     </div>

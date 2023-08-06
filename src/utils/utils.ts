@@ -9,6 +9,9 @@ export const ToDateTimeFormat = (time: Date) => {
 }
 
 export const ToDateFormat = (date: Date) => {
+    if (date.toString() === 'Invalid Date') {
+        return ''
+    }
     const isoString = date.toISOString()
     const year = isoString.slice(0, 4)
     const month = isoString.slice(5, 7)
