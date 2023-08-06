@@ -19,6 +19,7 @@ const PatientDetailsView: FunctionComponent = () => {
 
     const [selectedID, setSelectedID] = useState<string | undefined>('')
     const [benhAns, setBenhAns] = useState<BenhAn[]>([])
+    const [triggerRefreshListBenhAn, setTriggerRefreshListBenhAn] = useState(false)
 
     useEffect(() => {
         void supabaseClient
@@ -30,7 +31,7 @@ const PatientDetailsView: FunctionComponent = () => {
                 console.log('benhAns')
                 console.log(benhAns)
             })
-    }, [])
+    }, [triggerRefreshListBenhAn])
 
     return (
         <div className="relative w-full h-[1024px] text-center text-sm text-grey-grey-60 font-body-body-2">
@@ -279,7 +280,10 @@ const PatientDetailsView: FunctionComponent = () => {
                     })()}
                     patientID={patientID ?? ''}
                     khamBenhID={khamBenhID ?? ''}
-                    onCloseClick={hideMedicalRegister}
+                    onCloseClick={() => {
+                        setTriggerRefreshListBenhAn(!triggerRefreshListBenhAn)
+                        hideMedicalRegister()
+                    }}
                 />
             )}
         </div>

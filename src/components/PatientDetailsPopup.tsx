@@ -114,11 +114,6 @@ const PatientDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
             created_at: benhAn?.created_at ?? now.toISOString(),
             updated_at: now.toISOString()
         }
-        console.log('BenhAn')
-        console.log(newBenhAn)
-
-        console.log('benhAnThuocs')
-        console.log(benhAnThuocs)
 
         void supabaseClient
             .from(BenhAnTable)
@@ -190,6 +185,8 @@ const PatientDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
                             console.log(resp)
                         })
                 })
+
+                onCloseClick()
             })
     }
 
