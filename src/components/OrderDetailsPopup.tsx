@@ -7,6 +7,7 @@ import {
     type BenhAnThuoc,
     BenhAnThuocTable,
     type HoaDon,
+    HoaDonTable,
     type Profiles,
     ProfilesTable,
     type Thuoc,
@@ -91,6 +92,41 @@ const OrderDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
     }, [selectedID])
 
     useEffect(() => {
+        const now = new Date()
+        setHoaDon({
+            id: hoaDon?.id ?? formID,
+
+            benh_an_id: selectedID ?? null,
+            phuong_thuc: hoaDon?.phuong_thuc ?? '',
+            tien_kham: hoaDon?.tien_kham ?? null,
+            tong_so_tien: hoaDon?.tong_so_tien ?? 0,
+            trang_thai: hoaDon?.trang_thai ?? '',
+
+            created_at: hoaDon?.created_at ?? now.toISOString(),
+            updated_at: now.toISOString(),
+            deleted_at: null
+        })
+
+        if (selectedID === undefined) {
+            return
+        }
+
+        void supabaseClient
+            .from(HoaDonTable)
+            .select('*')
+            .eq('benh_an_id', selectedID)
+            .single()
+            .then(resp => {
+                if (resp.error !== null) {
+                    console.log('resp.error.HoaDonTable')
+                    console.log(resp.error)
+                    return
+                }
+                setHoaDon(resp.data as HoaDon)
+            })
+    }, [selectedID])
+
+    useEffect(() => {
         getAuthUser().then(async user => {
             if (user === null) {
                 return
@@ -130,6 +166,27 @@ const OrderDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
                 console.log(benhAns)
             })
     }, [])
+
+    function saveOrderAction() {
+        if (hoaDon === null) {
+            return
+        }
+
+        void supabaseClient
+            .from(HoaDonTable)
+            .upsert(hoaDon)
+            .then(resp => {
+                if (resp.error !== null) {
+                    console.log('resp-upsert.hoaDon')
+                    console.log(resp.error)
+                    return
+                }
+
+                console.log('resp')
+                console.log(resp)
+                onCloseClick()
+            })
+    }
 
     return <div
         className="absolute top-[calc(50%_-_400px)] left-[calc(50%_-_350px)] rounded-2xl bg-monochrome-white flex flex-row py-0 px-8 items-start justify-start text-center text-sm text-neutral-grey-700 font-button-button-2">
@@ -265,7 +322,7 @@ const OrderDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
                                                 setHoaDon({
                                                     id: hoaDon?.id ?? '',
 
-                                                    kham_benh_id: hoaDon?.kham_benh_id ?? '',
+                                                    benh_an_id: hoaDon?.benh_an_id ?? null,
                                                     phuong_thuc: hoaDon?.phuong_thuc ?? '',
                                                     tien_kham: hoaDon?.tien_kham ?? 0,
                                                     tong_so_tien: hoaDon?.tong_so_tien ?? 0,
@@ -340,7 +397,7 @@ const OrderDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
                                                 setHoaDon({
                                                     id: hoaDon?.id ?? '',
 
-                                                    kham_benh_id: hoaDon?.kham_benh_id ?? '',
+                                                    benh_an_id: hoaDon?.benh_an_id ?? '',
                                                     phuong_thuc: hoaDon?.phuong_thuc ?? '',
                                                     tien_kham: Math.floor((parseInt(e.target.value) ?? 1) * 1000),
                                                     tong_so_tien: hoaDon?.tong_so_tien ?? 0,
@@ -474,7 +531,7 @@ const OrderDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
             <div
                 className="rounded-xl bg-blue-blue-300 w-[636px] h-12 flex flex-row py-2 px-4 box-border items-center justify-center gap-[8px] text-monochrome-white cursor-button"
                 onClick={() => {
-                    // saveBenhAnAction()
+                    saveOrderAction()
                 }}
             >
                 <img className="relative w-7 h-7 hidden" alt="" src={'/lefticon8.svg'}/>

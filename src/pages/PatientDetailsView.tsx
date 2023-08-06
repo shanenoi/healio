@@ -330,8 +330,7 @@ const PatientDetailsView: FunctionComponent = () => {
                     patientID={patientID ?? ''}
                     khamBenhID={khamBenhID ?? ''}
                     onCloseClick={() => {
-                        setTriggerRefreshListBenhAn(!triggerRefreshListBenhAn)
-                        medicalRegisterHideMedicalRegister()
+                        orderDetailsHideMedicalRegister()
                     }}
                 />
             )}

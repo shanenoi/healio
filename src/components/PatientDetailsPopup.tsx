@@ -120,9 +120,9 @@ const PatientDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
             .from(BenhAnTable)
             .upsert(newBenhAn)
             .then(resp => {
-                console.log('resp-upsert.BenhAn')
-                console.log(resp.error)
                 if (resp.error !== null) {
+                    console.log('resp-upsert.BenhAn')
+                    console.log(resp.error)
                     return
                 }
 

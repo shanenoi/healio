@@ -226,10 +226,10 @@ export interface Database {
             }
             hoa_don: {
                 Row: {
+                    benh_an_id: string | null
                     created_at: string | null
                     deleted_at: string | null
                     id: string
-                    kham_benh_id: string
                     phuong_thuc: string
                     tien_kham: number | null
                     tong_so_tien: number
@@ -237,10 +237,10 @@ export interface Database {
                     updated_at: string | null
                 }
                 Insert: {
+                    benh_an_id?: string | null
                     created_at?: string | null
                     deleted_at?: string | null
                     id?: string
-                    kham_benh_id: string
                     phuong_thuc: string
                     tien_kham?: number | null
                     tong_so_tien: number
@@ -248,10 +248,10 @@ export interface Database {
                     updated_at?: string | null
                 }
                 Update: {
+                    benh_an_id?: string | null
                     created_at?: string | null
                     deleted_at?: string | null
                     id?: string
-                    kham_benh_id?: string
                     phuong_thuc?: string
                     tien_kham?: number | null
                     tong_so_tien?: number
@@ -260,9 +260,9 @@ export interface Database {
                 }
                 Relationships: [
                     {
-                        foreignKeyName: 'hoa_don_kham_benh_id_fkey'
-                        columns: ['kham_benh_id']
-                        referencedRelation: 'kham_benh'
+                        foreignKeyName: 'hoa_don_benh_an_id_fkey'
+                        columns: ['benh_an_id']
+                        referencedRelation: 'benh_an'
                         referencedColumns: ['id']
                     }
                 ]
