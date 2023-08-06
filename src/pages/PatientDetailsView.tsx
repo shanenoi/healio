@@ -70,6 +70,7 @@ const PatientDetailsView: FunctionComponent = () => {
                                 <div
                                     className="cursor-button flex rounded-lg bg-monochrome-white box-border h-8 py-2 px-4 items-center justify-center gap-[8px] text-sm text-blue-blue-400 border-[1px] border-solid border-blue-blue-400"
                                     onClick={() => {
+                                        setSelectedID(undefined)
                                         showMedicalRegister()
                                     }}
                                 >
