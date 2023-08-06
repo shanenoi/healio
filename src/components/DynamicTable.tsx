@@ -16,12 +16,14 @@ interface DynamicTableProps {
     headerDef: HeaderDef[]
     data: Array<Record<string, any>>
     onChange: (data: Array<Record<string, any>>, rowIndex: number) => void
+    disabled?: boolean
 }
 
 const DynamicTable: React.FC<DynamicTableProps> = ({
                                                        headerDef,
                                                        data,
-                                                       onChange
+                                                       onChange,
+                                                       disabled
                                                    }) => {
     const [stateData, setStateData] = useState(data)
 
@@ -73,6 +75,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
                         onChange={event => {
                             handleInputChange(event, rowIndex, header.name)
                         }}
+                        disabled={disabled}
                     />
                 )
             case 'number':
@@ -84,17 +87,19 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
                         onChange={event => {
                             handleInputChange(event, rowIndex, header.name)
                         }}
+                        disabled={disabled}
                     />
                 )
             case 'select':
                 return (
                     <select
-                        value={value}
+                        value={value === '' ? '--' : value}
                         className={'select-input input'}
                         onChange={event => {
                             handleInputChange(event, rowIndex, header.name)
                         }}
                         defaultValue={'--'}
+                        disabled={disabled}
                     >
                         <option
                             key={'--'}
@@ -122,7 +127,11 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
 
     return (
         <>
-            <button onClick={handleAddRow}>Thêm</button>
+            <button
+                onClick={handleAddRow}
+                style={{display: (disabled === true) ? 'none' : 'block'}}
+            >Thêm
+            </button>
             <table
                 style={{
                     alignSelf: 'start',
@@ -157,10 +166,13 @@ const DynamicTable: React.FC<DynamicTableProps> = ({
                             </td>
                         ))}
                         <td>
-                            <button onClick={() => {
-                                console.log(JSON.stringify(row))
-                                handleDeleteRow(row._id)
-                            }}>
+                            <button
+                                onClick={() => {
+                                    console.log(JSON.stringify(row))
+                                    handleDeleteRow(row._id)
+                                }}
+                                style={{display: (disabled === true) ? 'none' : 'block'}}
+                            >
                                 X
                             </button>
                         </td>

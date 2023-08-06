@@ -1,3 +1,4 @@
+import OrderDetailsPopup from '../components/OrderDetailsPopup'
 import PatientDetailsPopup from '../components/PatientDetailsPopup'
 import PatientViewContainer from '../components/PatientViewContainer'
 import {CtrlPopupVisibility} from '../utils/utils'
@@ -8,14 +9,19 @@ import {useParams} from 'react-router-dom'
 import {v4 as uuidv4} from 'uuid'
 
 const PatientDetailsView: FunctionComponent = () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const {patientID, khamBenhID} = useParams<{ patientID: string, khamBenhID: string }>()
 
-    const popupVisibility = CtrlPopupVisibility()
-    const blurBackgroundRef = popupVisibility.blurBackgroundRef
-    const showMedicalRegisterContainer = popupVisibility.showPp
-    const showMedicalRegister = popupVisibility.showP
-    const hideMedicalRegister = popupVisibility.hideP
+    const popupMedicalRegisterVisibility = CtrlPopupVisibility()
+    const medicalRegisterBlurBackgroundRef = popupMedicalRegisterVisibility.blurBackgroundRef
+    const medicalRegisterShowMedicalRegisterContainer = popupMedicalRegisterVisibility.showPp
+    const medicalRegisterShowMedicalRegister = popupMedicalRegisterVisibility.showP
+    const medicalRegisterHideMedicalRegister = popupMedicalRegisterVisibility.hideP
+
+    const popupOrderDetailsVisibility = CtrlPopupVisibility()
+    const orderDetailsBlurBackgroundRef = popupOrderDetailsVisibility.blurBackgroundRef
+    const orderDetailsShowMedicalRegisterContainer = popupOrderDetailsVisibility.showPp
+    const orderDetailsShowMedicalRegister = popupOrderDetailsVisibility.showP
+    const orderDetailsHideMedicalRegister = popupOrderDetailsVisibility.hideP
 
     const [selectedID, setSelectedID] = useState<string | undefined>('')
     const [benhAns, setBenhAns] = useState<BenhAn[]>([])
@@ -71,7 +77,7 @@ const PatientDetailsView: FunctionComponent = () => {
                                     className="cursor-button flex rounded-lg bg-monochrome-white box-border h-8 py-2 px-4 items-center justify-center gap-[8px] text-sm text-blue-blue-400 border-[1px] border-solid border-blue-blue-400"
                                     onClick={() => {
                                         setSelectedID(undefined)
-                                        showMedicalRegister()
+                                        medicalRegisterShowMedicalRegister()
                                     }}
                                 >
                                     <img
@@ -83,6 +89,22 @@ const PatientDetailsView: FunctionComponent = () => {
                                         Thêm bệnh án
                                     </div>
                                 </div>
+                                <div
+                                    className="cursor-button flex rounded-lg bg-monochrome-white box-border h-8 py-2 px-4 items-center justify-center gap-[8px] text-sm text-blue-blue-400 border-[1px] border-solid border-blue-blue-400"
+                                    onClick={() => {
+                                        orderDetailsShowMedicalRegister()
+                                    }}
+                                >
+                                    <img
+                                        className="relative w-4 h-4"
+                                        alt=""
+                                        src="/noun-printer-5896976.svg"
+                                    />
+                                    <div className="relative leading-[150%] uppercase font-medium">
+                                        Hóa đơn
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                         <div className="flex flex-col items-center justify-start text-blue-blue-900">
@@ -124,7 +146,7 @@ const PatientDetailsView: FunctionComponent = () => {
                                             propColor="#202124"
                                             ActionsCallback={() => {
                                                 setSelectedID(item.id)
-                                                showMedicalRegister()
+                                                medicalRegisterShowMedicalRegister()
                                                 console.log(selectedID)
                                             }}
                                         />
@@ -264,12 +286,12 @@ const PatientDetailsView: FunctionComponent = () => {
 
             <div
                 id={'blur-background'}
-                ref={blurBackgroundRef}
+                ref={medicalRegisterBlurBackgroundRef}
                 style={{visibility: 'hidden'}}
                 className="absolute top-[calc(50%_-_512px)] left-[0px] bg-blur-background w-[100%] h-[1024px]"
-                onClick={hideMedicalRegister}
+                onClick={medicalRegisterHideMedicalRegister}
             />
-            {showMedicalRegisterContainer && (
+            {medicalRegisterShowMedicalRegisterContainer && (
                 <PatientDetailsPopup
                     formID={uuidv4()}
                     existedID={selectedID}
@@ -283,7 +305,33 @@ const PatientDetailsView: FunctionComponent = () => {
                     khamBenhID={khamBenhID ?? ''}
                     onCloseClick={() => {
                         setTriggerRefreshListBenhAn(!triggerRefreshListBenhAn)
-                        hideMedicalRegister()
+                        medicalRegisterHideMedicalRegister()
+                    }}
+                />
+            )}
+
+            <div
+                id={'blur-background'}
+                ref={orderDetailsBlurBackgroundRef}
+                style={{visibility: 'hidden'}}
+                className="absolute top-[calc(50%_-_512px)] left-[0px] bg-blur-background w-[100%] h-[1024px]"
+                onClick={orderDetailsHideMedicalRegister}
+            />
+            {orderDetailsShowMedicalRegisterContainer && (
+                <OrderDetailsPopup
+                    formID={uuidv4()}
+                    existedID={selectedID}
+                    existedBenhAn={(() => {
+                        if (selectedID !== undefined) {
+                            return benhAns?.find((item) => item?.id === selectedID)
+                        }
+                        return undefined
+                    })()}
+                    patientID={patientID ?? ''}
+                    khamBenhID={khamBenhID ?? ''}
+                    onCloseClick={() => {
+                        setTriggerRefreshListBenhAn(!triggerRefreshListBenhAn)
+                        medicalRegisterHideMedicalRegister()
                     }}
                 />
             )}
