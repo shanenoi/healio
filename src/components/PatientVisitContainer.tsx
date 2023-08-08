@@ -4,12 +4,14 @@ interface PatientVisitContainerType {
     productIds?: string
     productDimensions?: string
     onclickRegister?: MouseEventHandler<HTMLDivElement>
+    onclickProfile?: MouseEventHandler<HTMLDivElement>
 }
 
 const PatientVisitContainer: FunctionComponent<PatientVisitContainerType> = ({
                                                                                  productIds,
                                                                                  productDimensions,
-                                                                                 onclickRegister
+                                                                                 onclickRegister,
+                                                                                 onclickProfile
                                                                              }) => {
     return (
         <div
@@ -36,7 +38,7 @@ const PatientVisitContainer: FunctionComponent<PatientVisitContainerType> = ({
 
             <div
                 className="self-stretch flex flex-row items-start justify-start text-center text-base text-monochrome-white cursor-button"
-                onClick={onclickRegister}>
+                onClick={onclickProfile}>
                 <div
                     className="rounded-xl bg-blue-blue-300 w-[400px] h-12 flex flex-row py-2 px-4 box-border items-center justify-center gap-[8px]">
                     <img className="relative w-7 h-7 hidden" alt="" src={productIds}/>
