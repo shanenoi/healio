@@ -261,19 +261,6 @@ const PatientDetailsView: FunctionComponent = () => {
                                         <img
                                             className="relative w-6 h-6"
                                             alt=""
-                                            src="/clipboard-regular.svg"
-                                        />
-                                        <div className="relative leading-[150%]">
-                                            Phát đồ điều trị
-                                        </div>
-                                    </div>
-                                </div>
-                                <div
-                                    className="w-[200px] h-[50px] flex flex-col py-6 px-4 box-border items-start justify-center">
-                                    <div className="w-[108px] flex flex-row items-center justify-start gap-[16px]">
-                                        <img
-                                            className="relative w-6 h-6"
-                                            alt=""
                                             src="/receipt-regular.svg"
                                         />
                                         <div className="relative leading-[150%]">Hóa đơn</div>
