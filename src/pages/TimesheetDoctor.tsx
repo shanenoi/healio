@@ -1,5 +1,7 @@
 import KhamBenhContainer from '../components/KhamBenhContainer'
 import MedicalRegisterPopup from '../components/MedicalRegisterPopup'
+import MenuBasi from '../components/MenuBasi'
+import PersonalInfoPopup from '../components/PersonalInfoPopup'
 import {CtrlPopupVisibility} from '../utils/utils'
 import {GraphQLClient} from '../utils/supabaseClient'
 import {QueryListMedicalExamination} from '../api/graphql_query'
@@ -12,6 +14,12 @@ const TimesheetDoctor: FunctionComponent = () => {
     const showMedicalRegisterContainer = popupVisibility.showPp
     const showMedicalRegister = popupVisibility.showP
     const hideMedicalRegister = popupVisibility.hideP
+
+    const popupPersonalInfoVisibility = CtrlPopupVisibility()
+    const personalInfoBlurBackgroundRef = popupPersonalInfoVisibility.blurBackgroundRef
+    const medicalPersonalInfoPopupMedicalRegisterContainer = popupPersonalInfoVisibility.showPp
+    const personalInfoShowMedicalRegister = popupPersonalInfoVisibility.showP
+    const personalInfoHideMedicalRegister = popupPersonalInfoVisibility.hideP
 
     const [medicalExaminations, setMedicalExaminations] = useState<ListMedicalExaminationResponse | null>(null)
     const [selectedID, setSelectedID] = useState('')
@@ -44,7 +52,9 @@ const TimesheetDoctor: FunctionComponent = () => {
                     <div className="h-[1024px] flex flex-col p-8 box-border items-center justify-start gap-[32px]">
                         <div className="w-[1498px] flex flex-row items-center justify-between text-left">
                             <div
-                                className="rounded-xl bg-monochrome-white box-border w-[343px] h-[49px] flex flex-row py-0 px-3 items-center justify-start gap-[8px] border-[1px] border-solid border-grey-grey-40-t">
+                                className="rounded-xl bg-monochrome-white box-border w-[343px] h-[49px] flex flex-row py-0 px-3 items-center justify-start gap-[8px] border-[1px] border-solid border-grey-grey-40-t"
+                                style={{display: 'none'}}
+                            >
                                 <img
                                     className="relative w-[22px] h-[22px]"
                                     alt=""
@@ -260,17 +270,7 @@ const TimesheetDoctor: FunctionComponent = () => {
                                 alt=""
                                 src="/vector-11.svg"
                             />
-                            <div
-                                className="w-[200px] h-[50px] flex flex-col py-6 px-4 box-border items-start justify-center">
-                                <div className="w-[108px] flex flex-row items-center justify-start gap-[16px]">
-                                    <img
-                                        className="relative w-6 h-6"
-                                        alt=""
-                                        src="/signout-regular.svg"
-                                    />
-                                    <div className="relative leading-[150%]">Đăng xuất</div>
-                                </div>
-                            </div>
+                            <MenuBasi onClickUpdateProfile={personalInfoShowMedicalRegister}/>
                         </div>
                     </div>
                 </div>
@@ -310,6 +310,20 @@ const TimesheetDoctor: FunctionComponent = () => {
                     }
                 )
             }
+
+            <div
+                id={'blur-background'}
+                ref={personalInfoBlurBackgroundRef}
+                style={{
+                    visibility: 'hidden',
+                    position: 'fixed'
+                }}
+                className="absolute top-[calc(50%_-_512px)] left-[0px] bg-blur-background w-[100%] h-[1024px]"
+                onClick={personalInfoHideMedicalRegister}
+            />
+            {medicalPersonalInfoPopupMedicalRegisterContainer && (
+                <PersonalInfoPopup onCloseClick={personalInfoHideMedicalRegister}/>
+            )}
         </div>
     )
 }

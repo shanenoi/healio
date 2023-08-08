@@ -1,6 +1,8 @@
+import MenuBasi from '../components/MenuBasi'
 import OrderDetailsPopup from '../components/OrderDetailsPopup'
 import PatientDetailsPopup from '../components/PatientDetailsPopup'
 import PatientViewContainer from '../components/PatientViewContainer'
+import PersonalInfoPopup from '../components/PersonalInfoPopup'
 import {CtrlPopupVisibility} from '../utils/utils'
 import {supabaseClient} from '../utils/supabaseClient'
 import {type BenhAn, BenhAnTable} from '../utils/supabaseTypes'
@@ -22,6 +24,12 @@ const PatientDetailsView: FunctionComponent = () => {
     const orderDetailsShowMedicalRegisterContainer = popupOrderDetailsVisibility.showPp
     const orderDetailsShowMedicalRegister = popupOrderDetailsVisibility.showP
     const orderDetailsHideMedicalRegister = popupOrderDetailsVisibility.hideP
+
+    const popupPersonalInfoVisibility = CtrlPopupVisibility()
+    const personalInfoBlurBackgroundRef = popupPersonalInfoVisibility.blurBackgroundRef
+    const medicalPersonalInfoPopupMedicalRegisterContainer = popupPersonalInfoVisibility.showPp
+    const personalInfoShowMedicalRegister = popupPersonalInfoVisibility.showP
+    const personalInfoHideMedicalRegister = popupPersonalInfoVisibility.hideP
 
     const [selectedID, setSelectedID] = useState<string | undefined>('')
     const [benhAns, setBenhAns] = useState<BenhAn[]>([])
@@ -271,23 +279,14 @@ const PatientDetailsView: FunctionComponent = () => {
                                         <div className="relative leading-[150%]">Hóa đơn</div>
                                     </div>
                                 </div>
+
                             </div>
                             <img
                                 className="relative w-[164px] h-0.5"
                                 alt=""
                                 src="/vector-11.svg"
                             />
-                            <div
-                                className="w-[200px] h-[50px] flex flex-col py-6 px-4 box-border items-start justify-center">
-                                <div className="w-[108px] flex flex-row items-center justify-start gap-[16px]">
-                                    <img
-                                        className="relative w-6 h-6"
-                                        alt=""
-                                        src="/signout-regular.svg"
-                                    />
-                                    <div className="relative leading-[150%]">Đăng xuất</div>
-                                </div>
-                            </div>
+                            <MenuBasi onClickUpdateProfile={personalInfoShowMedicalRegister}/>
                         </div>
                     </div>
                 </div>
@@ -348,6 +347,20 @@ const PatientDetailsView: FunctionComponent = () => {
                         orderDetailsHideMedicalRegister()
                     }}
                 />
+            )}
+
+            <div
+                id={'blur-background'}
+                ref={personalInfoBlurBackgroundRef}
+                style={{
+                    visibility: 'hidden',
+                    position: 'fixed'
+                }}
+                className="absolute top-[calc(50%_-_512px)] left-[0px] bg-blur-background w-[100%] h-[1024px]"
+                onClick={personalInfoHideMedicalRegister}
+            />
+            {medicalPersonalInfoPopupMedicalRegisterContainer && (
+                <PersonalInfoPopup onCloseClick={personalInfoHideMedicalRegister}/>
             )}
         </div>
     )

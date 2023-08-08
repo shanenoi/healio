@@ -3,15 +3,12 @@ import {getAuthUser, supabaseClient} from '../utils/supabaseClient'
 import {type BenhNhan, BenhNhanTable, type Profiles, ProfilesTable} from '../utils/supabaseTypes'
 
 interface PersonalInfoContainerType {
-    khamBenhID?: string
-    StartAt?: Date
-    Duration?: number
-    loaiKhamE?: string
-    noteE?: string
+    isPatient?: boolean
     onCloseClick: () => void
 }
 
 const PersonalInfoPopup: FunctionComponent<PersonalInfoContainerType> = ({
+                                                                             isPatient,
                                                                              onCloseClick
                                                                          }) => {
     const [profile, setProfile] = useState<Profiles>(null)
@@ -33,6 +30,10 @@ const PersonalInfoPopup: FunctionComponent<PersonalInfoContainerType> = ({
                     .eq('id', _id)
                     .single()
                 setProfile(p.data as Profiles)
+
+                if (isPatient !== true) {
+                    return
+                }
 
                 const b = await supabaseClient
                     .from(BenhNhanTable)
@@ -78,6 +79,7 @@ const PersonalInfoPopup: FunctionComponent<PersonalInfoContainerType> = ({
             })
 
         if (patient === null) {
+            onCloseClick()
             return
         }
 
@@ -340,58 +342,62 @@ const PersonalInfoPopup: FunctionComponent<PersonalInfoContainerType> = ({
                             </div>
                         </div>
                     </div>
-                    <div className="self-stretch flex flex-row items-start justify-start gap-[16px]">
-                        <div className="w-[310px] flex flex-col items-start justify-start">
-                            <div className="flex flex-row items-start justify-start gap-[2px]">
-                                <div className="relative leading-[150%]">Số bảo hiểm y tế</div>
-                            </div>
-                            <div
-                                className="self-stretch flex flex-col items-start justify-start gap-[4px] text-sm text-grey-grey-300-s">
-                                <div
-                                    className="self-stretch rounded-3xs bg-monochrome-white box-border h-[41px] flex flex-row py-0 px-4 items-center justify-start gap-[4px] border-[1px] border-solid border-grey-grey-40-t">
-                                    <img
-                                        className="relative w-[22px] h-[22px] hidden"
-                                        alt=""
-                                        src="/left-icon.svg"
-                                    />
-                                    <div className="flex-1 relative leading-[150%]">
-                                        <input
-                                            type="number"
-                                            className={'input no-arrows'}
-                                            placeholder={'--'}
-                                            value={patient?.bhyt ?? ''}
-                                            onChange={(e) => {
-                                                setPatient({
-                                                    id: patient?.id ?? '',
-
-                                                    bhyt: e.target.value,
-                                                    user_id: patient?.user_id ?? null,
-
-                                                    created_at: patient?.created_at ?? null,
-                                                    updated_at: patient?.created_at ?? null,
-                                                    deleted_at: patient?.created_at ?? null
-                                                })
-                                            }}
-                                        />
+                    {
+                        (isPatient === true) && (
+                            <div className="self-stretch flex flex-row items-start justify-start gap-[16px]">
+                                <div className="w-[310px] flex flex-col items-start justify-start">
+                                    <div className="flex flex-row items-start justify-start gap-[2px]">
+                                        <div className="relative leading-[150%]">Số bảo hiểm y tế</div>
                                     </div>
-                                    <img
-                                        className="relative w-[22px] h-[22px] hidden"
-                                        alt=""
-                                        src="/left-icon.svg"
-                                    />
-                                </div>
-                                <div
-                                    className="self-stretch hidden flex-row py-0 px-3 items-end justify-start gap-[4px] text-red-red-400">
-                                    <img
-                                        className="relative w-5 h-5"
-                                        alt=""
-                                        src="/notice-icon.svg"
-                                    />
-                                    <div className="flex-1 relative leading-[150%]">Allert</div>
+                                    <div
+                                        className="self-stretch flex flex-col items-start justify-start gap-[4px] text-sm text-grey-grey-300-s">
+                                        <div
+                                            className="self-stretch rounded-3xs bg-monochrome-white box-border h-[41px] flex flex-row py-0 px-4 items-center justify-start gap-[4px] border-[1px] border-solid border-grey-grey-40-t">
+                                            <img
+                                                className="relative w-[22px] h-[22px] hidden"
+                                                alt=""
+                                                src="/left-icon.svg"
+                                            />
+                                            <div className="flex-1 relative leading-[150%]">
+                                                <input
+                                                    type="number"
+                                                    className={'input no-arrows'}
+                                                    placeholder={'--'}
+                                                    value={patient?.bhyt ?? ''}
+                                                    onChange={(e) => {
+                                                        setPatient({
+                                                            id: patient?.id ?? '',
+
+                                                            bhyt: e.target.value,
+                                                            user_id: patient?.user_id ?? null,
+
+                                                            created_at: patient?.created_at ?? null,
+                                                            updated_at: patient?.created_at ?? null,
+                                                            deleted_at: patient?.created_at ?? null
+                                                        })
+                                                    }}
+                                                />
+                                            </div>
+                                            <img
+                                                className="relative w-[22px] h-[22px] hidden"
+                                                alt=""
+                                                src="/left-icon.svg"
+                                            />
+                                        </div>
+                                        <div
+                                            className="self-stretch hidden flex-row py-0 px-3 items-end justify-start gap-[4px] text-red-red-400">
+                                            <img
+                                                className="relative w-5 h-5"
+                                                alt=""
+                                                src="/notice-icon.svg"
+                                            />
+                                            <div className="flex-1 relative leading-[150%]">Allert</div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                        )
+                    }
                     <div
                         className="self-stretch hidden flex-col items-start justify-start gap-[4px] text-neutral-grey-600">
                         <div className="self-stretch flex flex-row items-start justify-start gap-[4px]">

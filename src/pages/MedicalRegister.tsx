@@ -59,7 +59,10 @@ const MedicalRegister: FunctionComponent = () => {
                 onClick={personalInfoHideMedicalRegister}
             />
             {medicalPersonalInfoPopupMedicalRegisterContainer && (
-                <PersonalInfoPopup onCloseClick={personalInfoHideMedicalRegister}/>
+                <PersonalInfoPopup
+                    isPatient={true}
+                    onCloseClick={personalInfoHideMedicalRegister}
+                />
             )}
         </div>
     )

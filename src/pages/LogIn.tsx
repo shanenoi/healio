@@ -2,6 +2,7 @@ import {Auth} from '@supabase/auth-ui-react'
 import {ThemeSupa} from '@supabase/auth-ui-shared'
 import {supabaseClient} from '../utils/supabaseClient'
 import {type FunctionComponent, useEffect, useState} from 'react'
+import {type Profiles, ProfilesTable} from '../utils/supabaseTypes'
 import {type User} from '@supabase/supabase-js'
 
 const LogIn: FunctionComponent = () => {
@@ -13,6 +14,33 @@ const LogIn: FunctionComponent = () => {
     const passwordLabel = 'Mật khẩu'
 
     const [user, setUser] = useState<User | null>(null)
+
+    useEffect(() => {
+        if (user === null) {
+            return
+        }
+
+        // const navigate = useNavigate()
+        void supabaseClient
+            .from(ProfilesTable)
+            .select('*')
+            .eq('id', user.id)
+            .single()
+            .then(resp => {
+                if (resp.error !== null) {
+                    console.log('resp-get.Profiles')
+                    console.log(resp.error)
+                    return
+                }
+                const data: Profiles = resp.data
+                if (data.user_type === 'bn') {
+                    document.location.href = '/medical-register'
+                } else {
+                    document.location.href = '/timesheet-doctor'
+                }
+            })
+    }, [user])
+
     useEffect(() => {
         const {data: authListener} = supabaseClient.auth.onAuthStateChange((event, session) => {
             if (session === null) {
