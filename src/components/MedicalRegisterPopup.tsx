@@ -10,13 +10,6 @@ import {useNavigate} from 'react-router-dom'
 
 const defaultThoiLuong = 30
 
-const timeTableContent = `
-from start to end
-from start to end
-from start to end
-from start to end
-`
-
 interface EmployeeInfoContainerType {
     formID?: string
     selectedUserID?: string
@@ -28,11 +21,22 @@ interface EmployeeInfoContainerType {
     onCloseClick: () => void
 }
 
-const reloadEvents = async () => {
+const reloadEvents = async (bacSiID: string) => {
     const config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: 'http://localhost:6290/order-event',
+        url: `http://localhost:6290/order-event?bac_si_id=${bacSiID}`,
+        headers: {}
+    }
+
+    return await axios.request(config)
+}
+
+const getAvailableTime = async (bacSiID: string, date: Date) => {
+    const config = {
+        method: 'get',
+        maxBodyLength: Infinity,
+        url: `http://localhost:6290/available-time?bac_si_id=${bacSiID}&time=${date.toISOString()}`,
         headers: {}
     }
 
@@ -66,6 +70,7 @@ const MedicalRegisterPopup: FunctionComponent<EmployeeInfoContainerType> = ({
     const [reloadListDoctor, setReloadListDoctor] = useState(false)
     const [examinationTypes, setExaminationTypes] = useState<ExaminationTypeResponse>({data: {bac_sy_loai_khamCollection: {edges: []}}})
     const [patient, setPatient] = useState<Profiles>(null)
+    const [timeTableContent, setTimeTableContent] = useState('')
 
     const handleReloadListDoctor = () => {
         setReloadListDoctor(!reloadListDoctor)
@@ -144,6 +149,31 @@ const MedicalRegisterPopup: FunctionComponent<EmployeeInfoContainerType> = ({
         })
     }, [reloadListDoctor])
 
+    useEffect(() => {
+        if (doctorID === nullBacSiID) {
+            return
+        }
+
+        const date = isEnableHenLichKham ? ngayGio : new Date()
+        getAvailableTime(doctorID, date)
+            .then(
+                response => {
+                    const d = response.data
+                    setTimeTableContent(d.map((item: {
+                        end_time: string
+                        start_time: string
+                    }) => {
+                        const start = new Date(item.start_time)
+                        const end = new Date(item.end_time)
+                        return `từ: ${start.getHours()}:${start.getMinutes()}   \t->\tđến: ${end.getHours()}:${end.getMinutes()}`
+                    }).join('\n'))
+                }
+            ).catch(err => {
+                console.log(err)
+            }
+        )
+    }, [doctorID])
+
     const onSaveClick = () => {
         if (patient === null) {
             return
@@ -178,7 +208,7 @@ const MedicalRegisterPopup: FunctionComponent<EmployeeInfoContainerType> = ({
             .insert(khamBenh)
             .then(r => {
                 console.log(r)
-                reloadEvents().then(r => {
+                reloadEvents(doctorID).then(r => {
                     console.log(r)
                 }).catch(err => {
                     console.log(err)
