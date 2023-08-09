@@ -3,8 +3,8 @@ import MedicalRegisterPopup from '../components/MedicalRegisterPopup'
 import MenuBasi, {TimeSheetDoctorEnum} from '../components/MenuBasi'
 import PersonalInfoPopup from '../components/PersonalInfoPopup'
 import {CtrlPopupVisibility} from '../utils/utils'
-import {GraphQLClient} from '../utils/supabaseClient'
 import {QueryListMedicalExamination} from '../api/graphql_query'
+import {getAuthUser, GraphQLClient} from '../utils/supabaseClient'
 import {type FunctionComponent, useEffect, useState} from 'react'
 import {type ListMedicalExaminationResponse} from '../api/response'
 
@@ -31,15 +31,21 @@ const TimesheetDoctor: FunctionComponent = () => {
 
     // get list medical examination
     useEffect(() => {
-        new GraphQLClient()
-            .Send(QueryListMedicalExamination())
-            .then((response) => {
-                const resp = response as ListMedicalExaminationResponse
-                setMedicalExaminations(resp)
-                console.log('resp')
-                console.log(resp)
-            }).catch((error) => {
-            console.log(error)
+        void getAuthUser().then((user) => {
+            if (user === null) {
+                return
+            }
+
+            new GraphQLClient()
+                .Send(QueryListMedicalExamination(user.id))
+                .then((response) => {
+                    const resp = response as ListMedicalExaminationResponse
+                    setMedicalExaminations(resp)
+                    console.log('resp')
+                    console.log(resp)
+                }).catch((error) => {
+                console.log(error)
+            })
         })
     }, [])
 

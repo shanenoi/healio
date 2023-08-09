@@ -1,4 +1,4 @@
-import {type LoaiKham, type Profiles} from '../utils/supabaseTypes'
+import {type LoaiKham, type Profiles, type Thuoc} from '../utils/supabaseTypes'
 
 export interface ExaminationTypeResponse {
     data: {
@@ -48,6 +48,35 @@ export interface ListMedicalExaminationResponse {
                     duration: number
                     benh_nhan: {
                         profiles: Profiles
+                    }
+                }
+            }>
+        }
+    }
+}
+
+export interface ListPatientDetailsResponse {
+    data: {
+        benh_anCollection: {
+            edges: Array<{
+                node: {
+                    id: string
+                    chan_doan: string
+                    trieu_chung: string
+                    loi_dan: string
+                    tai_kham: Date | null
+                    created_at: Date
+                    bac_sy: {
+                        profiles: Profiles
+                    }
+                    benh_an_thuocCollection: {
+                        edges: Array<{
+                            node: {
+                                thuoc: Thuoc
+                                ghi_chu: string
+                                so_luong: string
+                            }
+                        }>
                     }
                 }
             }>

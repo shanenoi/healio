@@ -1,14 +1,37 @@
 import React, {type FunctionComponent, useEffect, useState} from 'react'
+import {Divider, Table} from 'antd'
 import {getAuthUser, supabaseClient} from '../utils/supabaseClient'
 import {type BenhNhan, BenhNhanTable, type Profiles, ProfilesTable} from '../utils/supabaseTypes'
+import {type ColumnsType} from 'antd/es/table'
+import {type ListPatientDetailsResponse} from '../api/response'
+
+export type Thuoctype = ListPatientDetailsResponse['data']['benh_anCollection']['edges'][0]['node']['benh_an_thuocCollection']['edges'][0]
+
+export interface DataType {
+    key: React.Key
+    id: string
+    chan_doan: string
+    trieu_chung: string
+    loi_dan: string
+    tai_kham: Date | null
+    created_at: Date
+    basi_id: string
+    basi_email: string
+    basi_name: string
+    thuoc: Thuoctype[]
+}
 
 interface PersonalInfoContainerType {
     isPatient?: boolean
     onCloseClick: () => void
+    columns?: ColumnsType<DataType>
+    dataSource?: DataType[]
 }
 
 const PersonalInfoPopup: FunctionComponent<PersonalInfoContainerType> = ({
                                                                              isPatient,
+                                                                             columns,
+                                                                             dataSource,
                                                                              onCloseClick
                                                                          }) => {
     const [profile, setProfile] = useState<Profiles>(null)
@@ -397,6 +420,16 @@ const PersonalInfoPopup: FunctionComponent<PersonalInfoContainerType> = ({
                                 </div>
                             </div>
                         )
+                    }
+                    {
+                        columns !== undefined && dataSource !== undefined
+                            ? (
+                                <>
+                                    <Divider>Danh Sách Bệnh Án</Divider>
+                                    <Table columns={columns} dataSource={dataSource} scroll={{x: 1500, y: 300}}/>
+                                </>
+                            )
+                            : null
                     }
                     <div
                         className="self-stretch hidden flex-col items-start justify-start gap-[4px] text-neutral-grey-600">

@@ -172,7 +172,7 @@ const MedicalRegisterPopup: FunctionComponent<EmployeeInfoContainerType> = ({
                 console.log(err)
             }
         )
-    }, [doctorID])
+    }, [doctorID, ngayGio])
 
     const onSaveClick = () => {
         if (patient === null) {
