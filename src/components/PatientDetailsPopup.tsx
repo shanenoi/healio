@@ -16,6 +16,7 @@ import {
 interface EmployeeInfoContainerType {
     formID: string
     existedID?: string
+    hideUpdate?: boolean
     existedBenhAn?: BenhAn
     patientID: string
     khamBenhID: string
@@ -27,6 +28,7 @@ const now = new Date()
 const PatientDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
                                                                                formID,
                                                                                existedID,
+                                                                               hideUpdate,
                                                                                existedBenhAn,
                                                                                patientID,
                                                                                khamBenhID,
@@ -619,6 +621,7 @@ const PatientDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
                 </div>
                 <div
                     className="rounded-lg bg-monochrome-white box-border w-[249px] h-10 flex flex-row py-0 px-6 items-center justify-center gap-[8px] border-[1px] border-solid border-blue-blue-400 cursor-button"
+                    style={{display: hideUpdate === true ? 'none' : 'flex'}}
                     onClick={saveBenhAnAction}
                 >
                     <img className="relative w-6 h-6" alt="" src="/pencilsimple-regular.svg"/>

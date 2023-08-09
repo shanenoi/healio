@@ -1,6 +1,6 @@
 import KhamBenhContainer from '../components/KhamBenhContainer'
 import MedicalRegisterPopup from '../components/MedicalRegisterPopup'
-import MenuBasi from '../components/MenuBasi'
+import MenuBasi, {TimeSheetDoctorEnum} from '../components/MenuBasi'
 import PersonalInfoPopup from '../components/PersonalInfoPopup'
 import {CtrlPopupVisibility} from '../utils/utils'
 import {GraphQLClient} from '../utils/supabaseClient'
@@ -215,50 +215,8 @@ const TimesheetDoctor: FunctionComponent = () => {
                                 src="/logo-1@2x.png"
                             />
                         </div>
-                        <div
-                            className="absolute top-[90px] left-[0px] w-[200px] flex flex-col items-center justify-start gap-[18px]">
-                            <div className="self-stretch flex flex-col items-start justify-center">
-                                <div
-                                    className="bg-blue-blue-400 box-border w-[200px] h-[50px] flex flex-col p-4 items-start justify-center text-monochrome-white border-l-[4px] border-solid border-monochrome-white">
-                                    <div className="flex flex-row items-center justify-start gap-[16px]">
-                                        <img
-                                            className="relative w-6 h-6"
-                                            alt=""
-                                            src="/calendarblank-regular.svg"
-                                        />
-                                        <div className="relative leading-[150%]">Lịch làm việc</div>
-                                    </div>
-                                </div>
-                                <div
-                                    className="w-[200px] h-[50px] flex flex-col py-6 px-4 box-border items-start justify-center">
-                                    <div className="w-[108px] flex flex-row items-center justify-start gap-[16px]">
-                                        <img
-                                            className="relative w-[24.25px] h-6"
-                                            alt=""
-                                            src="/userlist-regular.svg"
-                                        />
-                                        <div className="relative leading-[150%]">Bệnh án</div>
-                                    </div>
-                                </div>
-                                <div
-                                    className="w-[200px] h-[50px] flex flex-col py-6 px-4 box-border items-start justify-center">
-                                    <div className="w-[108px] flex flex-row items-center justify-start gap-[16px]">
-                                        <img
-                                            className="relative w-6 h-6"
-                                            alt=""
-                                            src="/receipt-regular.svg"
-                                        />
-                                        <div className="relative leading-[150%]">Hóa đơn</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <img
-                                className="relative w-[164px] h-0.5"
-                                alt=""
-                                src="/vector-11.svg"
-                            />
-                            <MenuBasi onClickUpdateProfile={personalInfoShowMedicalRegister}/>
-                        </div>
+                        <MenuBasi onClickUpdateProfile={personalInfoShowMedicalRegister}
+                                  SelectedItem={TimeSheetDoctorEnum}/>
                     </div>
                 </div>
             </div>

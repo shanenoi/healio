@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@ant-design/icons": "^5.2.5",
     "@supabase/auth-ui-react": "^0.4.2",
     "@supabase/auth-ui-shared": "^0.1.6",
     "@supabase/supabase-js": "^2.26.0",
@@ -13,6 +14,7 @@
     "@types/node": "^16.11.14",
     "@types/react": "*",
     "@types/react-dom": "*",
+    "antd": "^5.8.2",
     "axios": "^1.4.0",
     "eslint-config-standard-with-typescript": "^36.0.0",
     "react": "*",

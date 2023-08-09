@@ -1,3 +1,4 @@
+import ListPatientDetailsView from './pages/ListPatientDetailsView'
 import LogIn from './pages/LogIn'
 import MedicalRegister from './pages/MedicalRegister'
 import PatientDetailsView from './pages/PatientDetailsView'
@@ -59,6 +60,7 @@ function App() {
             <Route path="/medical-register" element={<MedicalRegister/>}/>
             <Route path="/timesheet-doctor" element={<TimesheetDoctor/>}/>
             <Route path="/patient_details_view/:patientID/:khamBenhID" element={<PatientDetailsView/>}/>
+            <Route path="/list_patient_details_view" element={<ListPatientDetailsView/>}/>
         </Routes>
     )
 }

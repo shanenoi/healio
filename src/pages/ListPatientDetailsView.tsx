@@ -5,14 +5,11 @@ import PatientViewContainer from '../components/PatientViewContainer'
 import PersonalInfoPopup from '../components/PersonalInfoPopup'
 import {CtrlPopupVisibility} from '../utils/utils'
 import {supabaseClient} from '../utils/supabaseClient'
-import {type BenhAn, BenhAnTable} from '../utils/supabaseTypes'
+import {type BenhAn, BenhAnTable, type Profiles, ProfilesTable} from '../utils/supabaseTypes'
 import {type FunctionComponent, useEffect, useState} from 'react'
-import {useParams} from 'react-router-dom'
 import {v4 as uuidv4} from 'uuid'
 
-const PatientDetailsView: FunctionComponent = () => {
-    const {patientID, khamBenhID} = useParams<{ patientID: string, khamBenhID: string }>()
-
+const ListPatientDetailsView: FunctionComponent = () => {
     const popupMedicalRegisterVisibility = CtrlPopupVisibility()
     const medicalRegisterBlurBackgroundRef = popupMedicalRegisterVisibility.blurBackgroundRef
     const medicalRegisterShowMedicalRegisterContainer = popupMedicalRegisterVisibility.showPp
@@ -33,19 +30,30 @@ const PatientDetailsView: FunctionComponent = () => {
 
     const [selectedID, setSelectedID] = useState<string | undefined>('')
     const [benhAns, setBenhAns] = useState<BenhAn[]>([])
+    const [benhNhans, setBenhNhans] = useState<Profiles[]>([])
     const [triggerRefreshListBenhAn, setTriggerRefreshListBenhAn] = useState(false)
 
     useEffect(() => {
         void supabaseClient
             .from(BenhAnTable)
             .select('*')
-            .eq('benh_nhan_id', patientID)
             .then(resp => {
-                setBenhAns(resp.data as BenhAn[])
-                console.log('benhAns')
-                console.log(benhAns)
+                const newBenhAns = resp.data as BenhAn[]
+                setBenhAns(newBenhAns)
+
+                if (newBenhAns.length === 0) {
+                    return
+                }
+
+                void supabaseClient
+                    .from(ProfilesTable)
+                    .select('*')
+                    .in('id', newBenhAns.map(benhAn => benhAn?.benh_nhan_id))
+                    .then(resp => {
+                        setBenhNhans(resp.data as Profiles[])
+                    })
             })
-    }, [triggerRefreshListBenhAn])
+    }, [])
 
     return (
         <div className="relative w-full h-[1024px] text-center text-sm text-grey-grey-60 font-body-body-2">
@@ -68,7 +76,9 @@ const PatientDetailsView: FunctionComponent = () => {
                                 </div>
                             </div>
                             <div
-                                className="flex flex-row items-start justify-start gap-[20px] text-center text-xs text-grey-grey-900-p">
+                                className="flex flex-row items-start justify-start gap-[20px] text-center text-xs text-grey-grey-900-p"
+                                style={{display: 'none'}}
+                            >
                                 <div
                                     className="rounded-lg box-border h-8 hidden flex-row py-2 px-4 items-center justify-center gap-[8px] border-[1px] border-solid border-grey-grey-900-p">
                                     <img
@@ -125,6 +135,11 @@ const PatientDetailsView: FunctionComponent = () => {
                                         Số thứ tự
                                     </div>
                                 </div>
+                                <div className="self-stretch w-20 flex flex-row items-center justify-start">
+                                    <div className="relative leading-[150%] font-medium">
+                                        Bệnh nhân
+                                    </div>
+                                </div>
                                 <div
                                     className="flex-1 rounded-tl-lg rounded-tr-none rounded-br-none rounded-bl-lg h-[19px] flex flex-row items-center justify-start text-left">
                                     <div className="relative leading-[150%] font-medium">
@@ -150,6 +165,15 @@ const PatientDetailsView: FunctionComponent = () => {
                                     return (
                                         <PatientViewContainer
                                             ID={item.id}
+                                            Name={(() => {
+                                                const profiles = benhNhans.filter((item1) => item1?.id === item.benh_nhan_id)
+                                                console.log(profiles)
+                                                if (profiles.length === 0) {
+                                                    return ''
+                                                }
+                                                const profile = profiles[0]
+                                                return `${profile?.first_name ?? ''} ${profile?.last_name ?? ''}`
+                                            })()}
                                             key={item.id}
                                             OrderNumber={idx + 1}
                                             BenhAn={item}
@@ -230,7 +254,6 @@ const PatientDetailsView: FunctionComponent = () => {
                                 src="/logo-1@2x.png"
                             />
                         </div>
-
                         <MenuBasi onClickUpdateProfile={personalInfoShowMedicalRegister}
                                   SelectedItem={PatientDetailsEnum}/>
                     </div>
@@ -257,8 +280,11 @@ const PatientDetailsView: FunctionComponent = () => {
                         }
                         return undefined
                     })()}
-                    patientID={patientID ?? ''}
-                    khamBenhID={khamBenhID ?? ''}
+                    hideUpdate={true}
+                    // patientID={patientID ?? ''}
+                    patientID={''}
+                    khamBenhID={''}
+                    // khamBenhID={khamBenhID ?? ''}
                     onCloseClick={() => {
                         setTriggerRefreshListBenhAn(!triggerRefreshListBenhAn)
                         medicalRegisterHideMedicalRegister()
@@ -286,8 +312,8 @@ const PatientDetailsView: FunctionComponent = () => {
                         }
                         return undefined
                     })()}
-                    patientID={patientID ?? ''}
-                    khamBenhID={khamBenhID ?? ''}
+                    patientID={''}
+                    khamBenhID={''}
                     onCloseClick={() => {
                         orderDetailsHideMedicalRegister()
                     }}
@@ -311,4 +337,4 @@ const PatientDetailsView: FunctionComponent = () => {
     )
 }
 
-export default PatientDetailsView
+export default ListPatientDetailsView

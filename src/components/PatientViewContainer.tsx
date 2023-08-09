@@ -5,6 +5,7 @@ import {type BenhAn} from '../utils/supabaseTypes'
 
 interface PatientViewType {
     ID: string
+    Name?: string
     OrderNumber: number
     BenhAn: BenhAn
     ActionsCallback: (id: string) => void
@@ -15,6 +16,7 @@ interface PatientViewType {
 
 const PatientViewContainer: FunctionComponent<PatientViewType> = ({
                                                                       ID,
+                                                                      Name,
                                                                       OrderNumber,
                                                                       ActionsCallback,
                                                                       BenhAn,
@@ -35,6 +37,20 @@ const PatientViewContainer: FunctionComponent<PatientViewType> = ({
             <div className="w-20 flex flex-col items-start justify-center">
                 <div className="relative leading-[150%]">{OrderNumber}</div>
             </div>
+            {
+                Name !== undefined
+                    ? (
+                        <div className="w-20 flex flex-col items-start justify-center">
+                            <div
+                                className="relative leading-[150%] font-medium"
+                                style={KhamBenhContainerStyle}
+                            >
+                                {Name}
+                            </div>
+                        </div>
+                    )
+                    : null
+            }
             <div
                 className="self-stretch flex-1 flex flex-row items-center justify-start gap-[16px] text-green-green-900">
                 <div className="flex flex-col items-start justify-start">
