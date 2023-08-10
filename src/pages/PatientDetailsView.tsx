@@ -40,6 +40,7 @@ const PatientDetailsView: FunctionComponent = () => {
             .from(BenhAnTable)
             .select('*')
             .eq('benh_nhan_id', patientID)
+            .order('created_at', {ascending: false})
             .then(resp => {
                 setBenhAns(resp.data as BenhAn[])
                 console.log('benhAns')

@@ -1,7 +1,8 @@
 import DynamicTable from './DynamicTable'
 import React, {type FunctionComponent, useEffect, useState} from 'react'
-import {ToDateFormat} from '../utils/utils'
+import {ErrorMessage, SuccessMessage, ToDateFormat} from '../utils/utils'
 import {getAuthUser, supabaseClient} from '../utils/supabaseClient'
+import {notification} from 'antd'
 import {
     type BenhAn,
     BenhAnTable,
@@ -40,6 +41,10 @@ const PatientDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
     const [thuocs, setThuocs] = useState<Thuoc[]>([])
     const [oldBenhAnThuocs, setOldBenhAnThuocs] = useState<BenhAnThuoc[]>([])
     const [benhAnThuocs, setBenhAnThuocs] = useState<BenhAnThuoc[]>([])
+
+    const [api, pushMessageContextHolder] = notification.useNotification()
+    const pushInvalidDataMessage = ErrorMessage(api)
+    const pushSuccessMessage = SuccessMessage(api, 'bottomLeft')
 
     useEffect(() => {
         if (existedBenhAn === undefined) {
@@ -118,6 +123,32 @@ const PatientDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
             updated_at: now.toISOString()
         }
 
+        if (newBenhAn?.chan_doan?.length === 0) {
+            pushInvalidDataMessage('Lỗi Nhập Liệu', 'Chẩn đoán không được để trống')
+            return
+        }
+
+        if (benhAnThuocs.map(benhAnThuoc => {
+            if ((benhAnThuoc?.thuoc_id ?? '').length === 0) {
+                pushInvalidDataMessage('Lỗi Nhập Liệu', 'Thuốc không được để trống')
+                return true
+            }
+
+            if ((benhAnThuoc?.so_luong ?? 0) <= 0) {
+                pushInvalidDataMessage('Lỗi Nhập Liệu', 'Số lượng thuốc phải lớn hơn 0')
+                return true
+            }
+
+            return false
+        }).includes(true)) {
+            return
+        }
+
+        if (benhAnThuocs.length === 0) {
+            pushInvalidDataMessage('Lỗi Nhập Liệu', 'Phải có ít nhất 1 thuốc')
+            return
+        }
+
         void supabaseClient
             .from(BenhAnTable)
             .upsert(newBenhAn)
@@ -157,13 +188,6 @@ const PatientDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
                         return
                     }
 
-                    console.log('=====================')
-                    console.log(benhAnThuocs
-                        .map(benhAnThuoc => benhAnThuoc?.thuoc_id ?? ''))
-                    console.log(benhAnThuoc?.thuoc_id ?? '.')
-                    console.log(benhAnThuocs
-                        .map(benhAnThuoc => benhAnThuoc?.thuoc_id ?? '')
-                        .includes(benhAnThuoc?.thuoc_id ?? '.'))
                     if (benhAnThuocs
                         .map(benhAnThuoc => benhAnThuoc?.thuoc_id ?? '')
                         .includes(benhAnThuoc?.thuoc_id ?? '.')) {
@@ -189,7 +213,10 @@ const PatientDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
                         })
                 })
 
-                onCloseClick()
+                pushSuccessMessage('Cập nhật thành công', '')
+                setTimeout(() => {
+                    onCloseClick()
+                }, 1000)
             })
     }
 
@@ -216,6 +243,7 @@ const PatientDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
         className="absolute top-[calc(50%_-_400px)] left-[calc(50%_-_350px)] rounded-2xl bg-monochrome-white flex flex-row py-0 px-8 items-start justify-start text-center text-sm text-neutral-grey-700 font-button-button-2">
         <div
             className="self-stretch w-[636px] flex flex-col py-8 px-0 box-border items-center justify-start gap-[32px]">
+            {pushMessageContextHolder}
             <div className="self-stretch flex flex-row items-start justify-between text-blue-blue-400">
                 <div className="flex-1 flex flex-col items-center justify-center gap-[16px]">
                 </div>

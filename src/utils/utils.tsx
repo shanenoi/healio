@@ -1,3 +1,4 @@
+import {type NotificationInstance, type NotificationPlacement} from 'antd/es/notification/interface'
 import {useRef, useState} from 'react'
 
 export const ToTimeFormat = (time: Date) => {
@@ -45,4 +46,24 @@ export const CtrlPopupVisibility = () => {
         setVisibilityP(false)
     }
     return {blurBackgroundRef, showPp, showP, hideP}
+}
+
+export const SuccessMessage = (api: NotificationInstance, placement?: NotificationPlacement) => {
+    return (message: string, description: string) => {
+        api.success({
+            message,
+            description,
+            placement: placement !== undefined ? placement : 'topRight'
+        })
+    }
+}
+
+export const ErrorMessage = (api: NotificationInstance, placement?: NotificationPlacement) => {
+    return (message: string, description: string) => {
+        api.error({
+            message,
+            description,
+            placement: placement !== undefined ? placement : 'topRight'
+        })
+    }
 }

@@ -1,6 +1,8 @@
 import DynamicTable from './DynamicTable'
 import React, {type FunctionComponent, useEffect, useState} from 'react'
+import {ErrorMessage, SuccessMessage} from '../utils/utils'
 import {getAuthUser, supabaseClient} from '../utils/supabaseClient'
+import {notification} from 'antd'
 import {
     type BenhAn,
     BenhAnTable,
@@ -41,6 +43,20 @@ const OrderDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
     const [selectedID, setSelectedID] = useState(existedBenhAn?.id)
     const listStatuses = ['Chờ Thanh Toán', 'Đã Thanh Toán', 'Đã Hũy']
     const [listThuocBenhAnData, setListThuocBenhAnData] = useState<Array<Record<string, any>>>([])
+    const [oldTrangThai, setOldTrangThai] = useState('')
+
+    const [api, pushMessageContextHolder] = notification.useNotification()
+    const pushInvalidMessage = ErrorMessage(api)
+    const pushSuccessMessage = SuccessMessage(api, 'bottomLeft')
+    const pushFailedMessage = ErrorMessage(api, 'bottomLeft')
+
+    const calPrice = () => {
+        const totalMoneyThuoc = listThuocBenhAnData
+            .map(thuoc => parseInt(thuoc['Tổng tiền']) ?? 0)
+            .reduce((partialSum, a) => partialSum + a, 0)
+        const total = ((hoaDon?.tien_kham ?? 0) + (isNaN(totalMoneyThuoc) ? 0 : totalMoneyThuoc))
+        return total
+    }
 
     useEffect(() => {
         if (selectedID === undefined) {
@@ -78,13 +94,13 @@ const OrderDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
                                 _id: `${new Date().getTime()}.${Math.random().toString(36).substring(2, 9)}`,
                                 'Tên thuốc': bat.thuoc_id,
                                 'Số lượng': bat.so_luong,
-                                'Tổng tiền': `${bat.so_luong * (() => {
+                                'Tổng tiền': `${(bat.so_luong * (() => {
                                     const thuoc = thuocs.find(thuoc => thuoc?.id === bat.thuoc_id)
                                     if (thuoc === undefined || thuoc === null) {
                                         return 0
                                     }
                                     return thuoc.gia
-                                })()}đ`
+                                })())}đ`
                             }
                         }))
                     })
@@ -100,7 +116,7 @@ const OrderDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
             phuong_thuc: hoaDon?.phuong_thuc ?? '',
             tien_kham: hoaDon?.tien_kham ?? null,
             tong_so_tien: hoaDon?.tong_so_tien ?? 0,
-            trang_thai: hoaDon?.trang_thai ?? '',
+            trang_thai: hoaDon?.trang_thai ?? listStatuses[0],
 
             created_at: hoaDon?.created_at ?? now.toISOString(),
             updated_at: now.toISOString(),
@@ -122,9 +138,27 @@ const OrderDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
                     console.log(resp.error)
                     return
                 }
-                setHoaDon(resp.data as HoaDon)
+                const d = resp.data as HoaDon
+                setHoaDon(d)
+                setOldTrangThai(d?.trang_thai ?? listStatuses[0])
             })
     }, [selectedID])
+
+    useEffect(() => {
+        setHoaDon({
+            id: hoaDon?.id ?? formID,
+
+            benh_an_id: hoaDon?.benh_an_id ?? null,
+            phuong_thuc: hoaDon?.phuong_thuc ?? '',
+            tien_kham: hoaDon?.tien_kham ?? 0,
+            tong_so_tien: calPrice(),
+            trang_thai: hoaDon?.trang_thai ?? listStatuses[0],
+
+            created_at: hoaDon?.created_at ?? null,
+            updated_at: hoaDon?.updated_at ?? null,
+            deleted_at: hoaDon?.deleted_at ?? null
+        })
+    }, [listThuocBenhAnData])
 
     useEffect(() => {
         getAuthUser().then(async user => {
@@ -172,24 +206,46 @@ const OrderDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
             return
         }
 
+        console.log('hoaDon')
+        console.log(hoaDon)
+        if ((hoaDon?.tong_so_tien ?? 0) <= 0) {
+            pushInvalidMessage('Lỗi Nhập Liệu', 'Vui lòng nhập số tiền hợp lệ')
+            return
+        }
+
+        if (isNaN(hoaDon?.tien_kham ?? NaN)) {
+            pushInvalidMessage('Lỗi Nhập Liệu', 'Vui lòng nhập số tiền hợp lệ')
+            return
+        }
+
+        if (oldTrangThai === '') {
+            // ok
+        } else if (oldTrangThai === listStatuses[0]) {
+            // ok
+        } else {
+            pushFailedMessage('Cập nhật thất bại', 'Hóa đơn đã được xử lý, không thể cập nhật')
+            return
+        }
+
         void supabaseClient
             .from(HoaDonTable)
             .upsert(hoaDon)
             .then(resp => {
                 if (resp.error !== null) {
-                    console.log('resp-upsert.hoaDon')
-                    console.log(resp.error)
+                    pushInvalidMessage('Cập nhật thất bại', resp.error.message)
                     return
                 }
 
-                console.log('resp')
-                console.log(resp)
-                onCloseClick()
+                pushSuccessMessage('Cập nhật thành công', '')
+                setTimeout(() => {
+                    onCloseClick()
+                }, 1000)
             })
     }
 
     return <div
         className="absolute top-[calc(50%_-_400px)] left-[calc(50%_-_350px)] rounded-2xl bg-monochrome-white flex flex-row py-0 px-8 items-start justify-start text-center text-sm text-neutral-grey-700 font-button-button-2">
+        {pushMessageContextHolder}
         <div
             className="self-stretch w-[636px] flex flex-col py-8 px-0 box-border items-center justify-start gap-[32px]">
             <div className="self-stretch flex flex-row items-start justify-between text-blue-blue-400">
@@ -320,7 +376,7 @@ const OrderDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
                                             value={hoaDon?.trang_thai ?? 'Chờ Thanh Toán'}
                                             onChange={(e) => {
                                                 setHoaDon({
-                                                    id: hoaDon?.id ?? '',
+                                                    id: hoaDon?.id ?? formID,
 
                                                     benh_an_id: hoaDon?.benh_an_id ?? null,
                                                     phuong_thuc: hoaDon?.phuong_thuc ?? '',
@@ -395,13 +451,13 @@ const OrderDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
                                             }}
                                             onChange={(e) => {
                                                 setHoaDon({
-                                                    id: hoaDon?.id ?? '',
+                                                    id: hoaDon?.id ?? formID,
 
                                                     benh_an_id: hoaDon?.benh_an_id ?? '',
                                                     phuong_thuc: hoaDon?.phuong_thuc ?? '',
                                                     tien_kham: Math.floor((parseInt(e.target.value) ?? 1) * 1000),
                                                     tong_so_tien: hoaDon?.tong_so_tien ?? 0,
-                                                    trang_thai: hoaDon?.trang_thai ?? '',
+                                                    trang_thai: hoaDon?.trang_thai ?? listStatuses[0],
 
                                                     created_at: hoaDon?.created_at ?? null,
                                                     updated_at: hoaDon?.updated_at ?? null,
@@ -512,12 +568,7 @@ const OrderDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
                             <input
                                 type={'text'}
                                 placeholder={'1000, 0000'}
-                                value={(() => {
-                                    const totalMoneyThuoc = listThuocBenhAnData
-                                        .map(thuoc => parseInt(thuoc['Tổng tiền']) ?? 0)
-                                        .reduce((partialSum, a) => partialSum + a, 0)
-                                    return ((hoaDon?.tien_kham ?? 0) + (isNaN(totalMoneyThuoc) ? 0 : totalMoneyThuoc))
-                                })()}
+                                value={calPrice().toLocaleString('it-IT', {style: 'currency', currency: 'VND'})}
                                 className="self-stretch rounded-3xs bg-monochrome-white box-border h-[41px] flex flex-row py-0 px-4 items-center justify-start gap-[4px] border-[1px] border-solid border-grey-grey-40-t"
                                 style={{fontWeight: 'bold'}}
                                 disabled={true}
