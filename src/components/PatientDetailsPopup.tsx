@@ -144,6 +144,11 @@ const PatientDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
             return
         }
 
+        if (new Set(benhAnThuocs.map(benhAnThuoc => benhAnThuoc?.thuoc_id)).size !== benhAnThuocs.length) {
+            pushInvalidDataMessage('Lỗi Nhập Liệu', 'Thuốc không được trùng nhau')
+            return
+        }
+
         if (benhAnThuocs.length === 0) {
             pushInvalidDataMessage('Lỗi Nhập Liệu', 'Phải có ít nhất 1 thuốc')
             return
@@ -183,14 +188,25 @@ const PatientDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
                         })
                 })
 
+                const benhAnThuocIDs = benhAnThuocs.map(benhAnThuoc => (benhAnThuoc?.thuoc_id ?? '') + (benhAnThuoc?.kham_benh_id ?? '') + (benhAnThuoc?.benh_an_id ?? ''))
+                console.log('benhAnThuocIDs')
+                console.log(benhAnThuocIDs)
+                const oldBenhAnThuocIDs = oldBenhAnThuocs.map(benhAnThuoc => (benhAnThuoc?.thuoc_id ?? '') + (benhAnThuoc?.kham_benh_id ?? '') + (benhAnThuoc?.benh_an_id ?? ''))
+                console.log('oldBenhAnThuocIDs')
+                console.log(oldBenhAnThuocIDs)
+                const deletedBenhAnThuocIDs = oldBenhAnThuocIDs.filter(oldBenhAnThuocID => !benhAnThuocIDs.includes(oldBenhAnThuocID))
+                console.log('deletedBenhAnThuocIDs')
+                console.log(deletedBenhAnThuocIDs)
+
                 oldBenhAnThuocs.forEach(benhAnThuoc => {
                     if (benhAnThuoc === null) {
                         return
                     }
 
-                    if (benhAnThuocs
-                        .map(benhAnThuoc => benhAnThuoc?.thuoc_id ?? '')
-                        .includes(benhAnThuoc?.thuoc_id ?? '.')) {
+                    console.log('deletedBenhAnThuocIDs')
+                    console.log(deletedBenhAnThuocIDs)
+                    console.log(benhAnThuoc.thuoc_id)
+                    if (!deletedBenhAnThuocIDs.includes((benhAnThuoc.thuoc_id) + (benhAnThuoc.kham_benh_id) + (benhAnThuoc.benh_an_id))) {
                         return
                     }
 

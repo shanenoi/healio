@@ -1,5 +1,6 @@
 import React, {type FunctionComponent, useEffect, useState} from 'react'
-import {Divider, Table} from 'antd'
+import {Divider, notification, Table} from 'antd'
+import {ErrorMessage, SuccessMessage} from '../utils/utils'
 import {getAuthUser, supabaseClient} from '../utils/supabaseClient'
 import {type BenhNhan, BenhNhanTable, type Profiles, ProfilesTable} from '../utils/supabaseTypes'
 import {type ColumnsType} from 'antd/es/table'
@@ -36,6 +37,10 @@ const PersonalInfoPopup: FunctionComponent<PersonalInfoContainerType> = ({
                                                                          }) => {
     const [profile, setProfile] = useState<Profiles>(null)
     const [patient, setPatient] = useState<BenhNhan>(null)
+
+    const [api, pushMessageContextHolder] = notification.useNotification()
+    const pushInvalidDataMessage = ErrorMessage(api)
+    const pushSuccessMessage = SuccessMessage(api, 'bottomLeft')
 
     // get user info
     useEffect(() => {
@@ -91,6 +96,11 @@ const PersonalInfoPopup: FunctionComponent<PersonalInfoContainerType> = ({
             deleted_at: profile.deleted_at
         }
 
+        if (newProfile.first_name === null || newProfile.first_name === '') {
+            pushInvalidDataMessage('Lỗi Nhập Liệu', 'Vui lòng nhập tên')
+            return
+        }
+
         void supabaseClient
             .from(ProfilesTable)
             .upsert(newProfile)
@@ -127,11 +137,15 @@ const PersonalInfoPopup: FunctionComponent<PersonalInfoContainerType> = ({
                 }
             })
 
-        onCloseClick()
+        pushSuccessMessage('Cập nhật thành công', '')
+        setTimeout(() => {
+            onCloseClick()
+        }, 1000)
     }
 
     return <div
         className="absolute top-[calc(50%_-_400px)] left-[calc(50%_-_350px)] rounded-2xl bg-monochrome-white flex flex-row py-0 px-8 items-start justify-start text-center text-sm text-neutral-grey-700 font-button-button-2">
+        {pushMessageContextHolder}
         <div
             className="self-stretch w-[636px] flex flex-col py-8 px-0 box-border items-center justify-start gap-[32px]">
             <div className="self-stretch flex flex-row items-start justify-between text-blue-blue-400">
