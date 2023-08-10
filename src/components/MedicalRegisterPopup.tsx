@@ -1,14 +1,20 @@
 import React, {type FunctionComponent, useEffect, useState} from 'react'
 import ToggleSwitch from './ToggleSwitch'
 import axios from 'axios'
+import {ErrorMessage, SuccessMessage, ToDateTimeFormat, ToTimeFormat} from '../utils/utils'
 import {QueryListDoctorByExaminationType, QueryListExaminationType} from '../api/graphql_query'
-import {ToDateTimeFormat, ToTimeFormat} from '../utils/utils'
 import {getAuthUser, GraphQLClient, supabaseClient} from '../utils/supabaseClient'
+import {notification} from 'antd'
 import {type ExaminationTypeResponse, type ListDoctorByExaminationTypeResponse} from '../api/response'
 import {type KhamBenh, KhamBenhTable, type Profiles, ProfilesTable} from '../utils/supabaseTypes'
 import {useNavigate} from 'react-router-dom'
 
 const defaultThoiLuong = 30
+
+interface AvailableTime {
+    start: Date
+    end: Date
+}
 
 interface EmployeeInfoContainerType {
     formID?: string
@@ -43,6 +49,15 @@ const getAvailableTime = async (bacSiID: string, date: Date) => {
     return await axios.request(config)
 }
 
+const isTimeAvailable = (availableTimes: AvailableTime[], start: Date, end: Date) => {
+    for (const availableTime of availableTimes) {
+        if (start >= availableTime.start && end <= availableTime.end) {
+            return true
+        }
+    }
+    return false
+}
+
 const MedicalRegisterPopup: FunctionComponent<EmployeeInfoContainerType> = ({
                                                                                 formID,
                                                                                 selectedUserID,
@@ -71,6 +86,11 @@ const MedicalRegisterPopup: FunctionComponent<EmployeeInfoContainerType> = ({
     const [examinationTypes, setExaminationTypes] = useState<ExaminationTypeResponse>({data: {bac_sy_loai_khamCollection: {edges: []}}})
     const [patient, setPatient] = useState<Profiles>(null)
     const [timeTableContent, setTimeTableContent] = useState('')
+    const [availableTime, setAvailableTime] = useState<AvailableTime[]>([])
+
+    const [api, pushMessageContextHolder] = notification.useNotification()
+    const pushInvalidDataMessage = ErrorMessage(api)
+    const pushSuccessMessage = SuccessMessage(api, 'bottomLeft')
 
     const handleReloadListDoctor = () => {
         setReloadListDoctor(!reloadListDoctor)
@@ -159,6 +179,15 @@ const MedicalRegisterPopup: FunctionComponent<EmployeeInfoContainerType> = ({
             .then(
                 response => {
                     const d = response.data
+                    setAvailableTime(d.map((item: {
+                        end_time: string
+                        start_time: string
+                    }) => {
+                        const start = new Date(item.start_time)
+                        const end = new Date(item.end_time)
+                        return {start, end}
+                    }))
+
                     setTimeTableContent(d.map((item: {
                         end_time: string
                         start_time: string
@@ -175,6 +204,13 @@ const MedicalRegisterPopup: FunctionComponent<EmployeeInfoContainerType> = ({
     }, [doctorID, ngayGio])
 
     const onSaveClick = () => {
+        if (isEnableHenLichKham) {
+            if (!isTimeAvailable(availableTime, ngayGio, ngayGioKetThuc)) {
+                pushInvalidDataMessage('Lỗi Nhập Liệu', 'Thời gian không hợp lệ')
+                return
+            }
+        }
+
         if (patient === null) {
             return
         }
@@ -203,6 +239,11 @@ const MedicalRegisterPopup: FunctionComponent<EmployeeInfoContainerType> = ({
             deleted_at: null
         }
 
+        if (khamBenh.bac_sy_id === nullBacSiID) {
+            pushInvalidDataMessage('Lỗi Nhập Liệu', 'Vui lòng chọn bác sĩ')
+            return
+        }
+
         void supabaseClient
             .from(KhamBenhTable)
             .insert(khamBenh)
@@ -224,7 +265,10 @@ const MedicalRegisterPopup: FunctionComponent<EmployeeInfoContainerType> = ({
         console.log(`khamBenh.note ${khamBenh.note ?? ''}`)
         console.log('===========================')
 
-        onCloseClick()
+        pushSuccessMessage('Cập nhật thành công', '')
+        setTimeout(() => {
+            onCloseClick()
+        }, 1000)
     }
 
     const onChangeStartDate = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -260,6 +304,7 @@ const MedicalRegisterPopup: FunctionComponent<EmployeeInfoContainerType> = ({
 
     return <div
         className="absolute top-[calc(50%_-_400px)] left-[calc(50%_-_350px)] rounded-2xl bg-monochrome-white flex flex-row py-0 px-8 items-start justify-start text-center text-sm text-neutral-grey-700 font-button-button-2">
+        {pushMessageContextHolder}
         <div
             className="self-stretch w-[636px] flex flex-col py-8 px-0 box-border items-center justify-start gap-[32px]">
             <div className="self-stretch flex flex-row items-start justify-between text-blue-blue-400">
