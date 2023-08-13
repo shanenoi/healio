@@ -160,7 +160,7 @@ const PersonalInfoPopup: FunctionComponent<PersonalInfoContainerType> = ({
                      onClick={onCloseClick}/>
             </div>
             <div className="self-stretch flex flex-col items-start justify-start gap-[16px] text-left text-base">
-                <div className="relative font-medium">Thông tin bệnh nhân</div>
+                <div className="relative font-medium">Thông tin cá nhân</div>
                 <div
                     className="self-stretch flex flex-col items-start justify-start gap-[16px] text-xs text-grey-grey-900-p">
                     <div className="self-stretch flex flex-row items-start justify-start gap-[16px]">
