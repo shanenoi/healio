@@ -206,6 +206,7 @@ const MedicalRegisterPopup: FunctionComponent<EmployeeInfoContainerType> = ({
     const onSaveClick = () => {
         if (isEnableHenLichKham) {
             const now = new Date()
+            now.setHours(0, 0, 0, 0)
 
             if (ngayGio < now) {
                 pushInvalidDataMessage('Lỗi Nhập Liệu', 'Thời gian không không được chọn trong quá khứ')
