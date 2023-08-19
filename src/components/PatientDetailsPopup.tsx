@@ -8,6 +8,8 @@ import {
     BenhAnTable,
     type BenhAnThuoc,
     BenhAnThuocTable,
+    type KhamBenh,
+    KhamBenhTable,
     type Profiles,
     ProfilesTable,
     type Thuoc,
@@ -22,9 +24,12 @@ interface EmployeeInfoContainerType {
     patientID: string
     khamBenhID: string
     onCloseClick: () => void
+    showOrderDetails?: () => void
 }
 
 const now = new Date()
+
+const listTrangThai = ['Đã Khám', 'Đã Hủy']
 
 const PatientDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
                                                                                formID,
@@ -33,7 +38,8 @@ const PatientDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
                                                                                existedBenhAn,
                                                                                patientID,
                                                                                khamBenhID,
-                                                                               onCloseClick
+                                                                               onCloseClick,
+                                                                               showOrderDetails
                                                                            }) => {
     const [currentUser, setCurrentUser] = useState<Profiles>(null)
 
@@ -229,9 +235,50 @@ const PatientDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
                         })
                 })
 
+                void supabaseClient
+                    .from(KhamBenhTable)
+                    .select('*')
+                    .eq('id', khamBenhID)
+                    .single()
+                    .then(resp => {
+                        const khamBenh = resp.data as KhamBenh
+                        if (khamBenh === null) {
+                            return
+                        }
+
+                        const newKhamBenh: KhamBenh = {
+                            bac_sy_id: khamBenh.bac_sy_id,
+                            benh_nhan_id: khamBenh.benh_nhan_id,
+                            cancel_at: khamBenh.cancel_at,
+                            created_at: khamBenh.created_at,
+                            deleted_at: khamBenh.deleted_at,
+                            duration: khamBenh.duration,
+                            id: khamBenh.id,
+                            is_scheduled: khamBenh.is_scheduled,
+                            loai_kham_id: khamBenh.loai_kham_id,
+                            ngay_gio: khamBenh.ngay_gio,
+                            note: khamBenh.note,
+                            so_thu_tu: khamBenh.so_thu_tu,
+                            trang_thai: listTrangThai[0],
+                            updated_at: khamBenh.updated_at
+                        }
+
+                        void supabaseClient
+                            .from(KhamBenhTable)
+                            .upsert(newKhamBenh)
+                            .then(resp => {
+                                console.log('resp-upsert.BenhAnThuoc')
+                                console.log(resp)
+                            })
+                    })
+
                 pushSuccessMessage('Cập nhật thành công', '')
                 setTimeout(() => {
                     onCloseClick()
+                    if (showOrderDetails === undefined) {
+                        return
+                    }
+                    showOrderDetails()
                 }, 1000)
             })
     }

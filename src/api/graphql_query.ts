@@ -46,18 +46,25 @@ export const QueryListExaminationType = () => {
 }
 
 export const QueryListMedicalExamination = (basiID: string) => {
-    const x = new Date()
-    x.setDate(x.getDate() - 1)
-    x.setHours(23)
-    x.setMinutes(59)
-    x.setSeconds(59)
+    const markDate = new Date()
+    markDate.setDate(markDate.getDate() - 1)
+    markDate.setHours(23)
+    markDate.setMinutes(59)
+    markDate.setSeconds(59)
 
     const q: GraphQLQueryProps = {
         query: `
             query ($yt: Datetime, $basiID: UUID) {
               kham_benhCollection(
-                orderBy: {so_thu_tu: AscNullsLast}
-                filter: {ngay_gio: {gt: $yt}, bac_sy_id: {eq: $basiID}}
+                orderBy: {
+                  ngay_gio: AscNullsLast,
+                  so_thu_tu: AscNullsLast,
+                }
+                filter: {
+                  ngay_gio: {gt: $yt},
+                  bac_sy_id: {eq: $basiID},
+                  trang_thai: {eq: ""}
+                }
               ) {
                 edges {
                   node {
@@ -81,7 +88,7 @@ export const QueryListMedicalExamination = (basiID: string) => {
                 }
               }
             }`,
-        variables: {yt: x.toISOString(), basiID: basiID}
+        variables: {yt: markDate.toISOString(), basiID}
     }
     return q
 }

@@ -80,8 +80,7 @@ const OrderDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
                         const _benhAnThuoc = resp.data as BenhAnThuoc[]
                         setBenhAnThuocs(_benhAnThuoc)
 
-                        console.log(_benhAnThuoc)
-                        setListThuocBenhAnData(_benhAnThuoc.map(bat => {
+                        const newListThuocBenhAnData = _benhAnThuoc.map(bat => {
                             if (bat === null) {
                                 return {
                                     _id: `${new Date().getTime()}.${Math.random().toString(36).substring(2, 9)}`,
@@ -102,17 +101,18 @@ const OrderDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
                                     return thuoc.gia
                                 })())}đ`
                             }
-                        }))
+                        })
+                        setListThuocBenhAnData(newListThuocBenhAnData)
                     })
             })
-    }, [selectedID])
+    }, [selectedID, thuocs])
 
     useEffect(() => {
         const now = new Date()
         setHoaDon({
             id: hoaDon?.id ?? formID,
 
-            benh_an_id: selectedID ?? null,
+            benh_an_id: selectedID ?? existedBenhAn?.id ?? null,
             phuong_thuc: hoaDon?.phuong_thuc ?? '',
             tien_kham: hoaDon?.tien_kham ?? null,
             tong_so_tien: hoaDon?.tong_so_tien ?? 0,
@@ -148,7 +148,7 @@ const OrderDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
         setHoaDon({
             id: hoaDon?.id ?? formID,
 
-            benh_an_id: hoaDon?.benh_an_id ?? null,
+            benh_an_id: hoaDon?.benh_an_id ?? existedBenhAn?.id ?? null,
             phuong_thuc: hoaDon?.phuong_thuc ?? '',
             tien_kham: hoaDon?.tien_kham ?? 0,
             tong_so_tien: calPrice(),
@@ -378,7 +378,7 @@ const OrderDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
                                                 setHoaDon({
                                                     id: hoaDon?.id ?? formID,
 
-                                                    benh_an_id: hoaDon?.benh_an_id ?? null,
+                                                    benh_an_id: hoaDon?.benh_an_id ?? existedBenhAn?.id ?? null,
                                                     phuong_thuc: hoaDon?.phuong_thuc ?? '',
                                                     tien_kham: hoaDon?.tien_kham ?? 0,
                                                     tong_so_tien: hoaDon?.tong_so_tien ?? 0,
@@ -453,7 +453,7 @@ const OrderDetailsPopup: FunctionComponent<EmployeeInfoContainerType> = ({
                                                 setHoaDon({
                                                     id: hoaDon?.id ?? formID,
 
-                                                    benh_an_id: hoaDon?.benh_an_id ?? '',
+                                                    benh_an_id: hoaDon?.benh_an_id ?? existedBenhAn?.id ?? null,
                                                     phuong_thuc: hoaDon?.phuong_thuc ?? '',
                                                     tien_kham: Math.floor((parseInt(e.target.value) ?? 1) * 1000),
                                                     tong_so_tien: hoaDon?.tong_so_tien ?? 0,

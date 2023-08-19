@@ -264,6 +264,9 @@ const PatientDetailsView: FunctionComponent = () => {
                         setTriggerRefreshListBenhAn(!triggerRefreshListBenhAn)
                         medicalRegisterHideMedicalRegister()
                     }}
+                    showOrderDetails={() => {
+                        orderDetailsShowMedicalRegister()
+                    }}
                 />
             )}
 
