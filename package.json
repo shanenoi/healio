@@ -15,7 +15,7 @@
     "@types/react": "*",
     "@types/react-dom": "*",
     "antd": "^5.8.2",
-    "axios": "^1.4.0",
+    "axios": "^1.6.0",
     "eslint-config-standard-with-typescript": "^36.0.0",
     "react": "*",
     "react-datetime-picker": "*",
